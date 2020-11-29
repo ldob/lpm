@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>eu.ldob</groupId>
-	<artifactId>lpm-be</artifactId>
+	<artifactId>lpm</artifactId>
 	<version>1.0.0</version>
-	<name>lpm-be</name>
+	<name>lpm</name>
 	<description>LDOB Project Management</description>
 
 	<properties>
@@ -79,27 +79,41 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
 			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.6</version>
+				<configuration>
+					<nodeVersion>v9.11.2</nodeVersion>
+				</configuration>
 				<executions>
 					<execution>
-						<id>copy-resources</id>
-						<phase>validate</phase>
+						<id>install-npm</id>
 						<goals>
-							<goal>copy-resources</goal>
+							<goal>install-node-and-npm</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>npm-install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>npm-build</id>
+						<goals>
+							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${build.directory}/classes/static/</outputDirectory>
-							<resources>
-								<resource>
-									<directory>../lpm/dist</directory>
-								</resource>
-							</resources>
+							<arguments>run-script build</arguments>
 						</configuration>
 					</execution>
 				</executions>

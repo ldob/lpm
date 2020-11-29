@@ -1,0 +1,8 @@
+app-root {
+  background-color: rgba(66, 66, 66, 0.8);
+}
+
+.expanded-toolbar {
+  justify-content: space-between;
+  align-items: center;
+}
