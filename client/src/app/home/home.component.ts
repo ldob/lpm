@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
+  title = 'GBF IT Projektmanagement';
+
   constructor() { }
 
   ngOnInit(): void {

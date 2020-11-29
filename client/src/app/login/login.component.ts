@@ -9,7 +9,7 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  protected form: FormGroup | undefined;
+  form!: FormGroup;
   public loginInvalid: boolean = false;
   private formSubmitAttempt: boolean = false;
   private returnUrl: string = "";
@@ -40,7 +40,11 @@ export class LoginComponent implements OnInit {
     this.formSubmitAttempt = false;
     if (this.form.valid) {
       try {
+        // TODO
+        // @ts-ignore
         const username = this.form.get('username').value;
+        // TODO
+        // @ts-ignore
         const password = this.form.get('password').value;
         await this.authService.login(username, password);
       } catch (err) {

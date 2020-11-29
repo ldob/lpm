@@ -2,6 +2,7 @@
     <span>
       <button mat-button routerLink="/">{{title}}</button>
       <button mat-button routerLink="/"><mat-icon>home</mat-icon></button>
+      <button mat-button routerLink="/projects"><mat-icon>list</mat-icon></button>
     </span>
   <div fxLayout="row" fxShow="false" fxShow.gt-sm>
     <button mat-button routerLink="/login" *ngIf="!isAuthenticated">
@@ -11,10 +12,6 @@
     <button mat-button *ngIf="isAuthenticated" (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>
       Logout
-    </button>
-    <button mat-button routerLink="/game">
-      <mat-icon>gamepad</mat-icon>
-      Play
     </button>
   </div>
   <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
@@ -26,9 +23,9 @@
     <mat-icon>home</mat-icon>
     Home
   </button>
-  <button mat-menu-item routerLink="/game">
-    <mat-icon>gamepad</mat-icon>
-    Play
+  <button mat-menu-item routerLink="/projects">
+    <mat-icon>list</mat-icon>
+    Projektliste
   </button>
   <button mat-menu-item routerLink="/login" *ngIf="!isAuthenticated">
     <mat-icon>power_settings_new</mat-icon>

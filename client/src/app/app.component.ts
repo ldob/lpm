@@ -10,7 +10,7 @@ export class AppComponent {
 
   title = 'GBF IT Projektmanagement';
 
-  isAuthenticated: boolean;
+  isAuthenticated: boolean = false;
 
   constructor(public authService: AuthService) {
     this.authService.isAuthenticated.subscribe(

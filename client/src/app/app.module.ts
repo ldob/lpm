@@ -1,5 +1,4 @@
 import {AppComponent} from './app.component';
-import {MenuComponent} from './menu/menu.component';
 import {ProjectListComponent} from './project-list/project-list.component';
 
 import { NgModule } from '@angular/core';
@@ -34,10 +33,9 @@ import { LoginComponent } from './login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
-    ProjectListComponent,
-    MenuComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    ProjectListComponent
   ],
   imports: [
     BrowserModule,
