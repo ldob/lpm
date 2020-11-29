@@ -1,12 +1,12 @@
 package eu.ldob.lpm.be.converter;
 
-import eu.ldob.lpm.be.entity.Project;
+import eu.ldob.lpm.be.response.ProjectResponse;
 import eu.ldob.lpm.be.model.ProjectModel;
 import eu.ldob.lpm.be.request.ProjectRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectModel, Project> {
+public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectModel, ProjectResponse> {
     @Override
     public ProjectModel requestToModel(ProjectRequest request) {
         ProjectModel model = new ProjectModel();
@@ -20,8 +20,8 @@ public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectM
         return model;
     }
     @Override
-    public Project modelToResponse(ProjectModel model) {
-        Project response = new Project();
+    public ProjectResponse modelToResponse(ProjectModel model) {
+        ProjectResponse response = new ProjectResponse();
 
         response.setId(model.getId());
         response.setName(model.getName());

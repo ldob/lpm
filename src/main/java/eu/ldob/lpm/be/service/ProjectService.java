@@ -1,7 +1,7 @@
 package eu.ldob.lpm.be.service;
 
 import eu.ldob.lpm.be.converter.ProjectConverter;
-import eu.ldob.lpm.be.entity.Project;
+import eu.ldob.lpm.be.response.ProjectResponse;
 import eu.ldob.lpm.be.exception.LpmNoResultException;
 import eu.ldob.lpm.be.model.ProjectModel;
 import eu.ldob.lpm.be.repository.ProjectRepository;
@@ -24,7 +24,7 @@ public class ProjectService {
     @Autowired
     ProjectRepository repository;
 
-    public Project add(final ProjectRequest request) {
+    public ProjectResponse add(final ProjectRequest request) {
         ProjectModel model = converter.requestToModel(request);
 
         model.setStartDate(new Date());
@@ -32,9 +32,9 @@ public class ProjectService {
         return converter.modelToResponse(repository.save(model));
     }
 
-    public List<Project> findAll() {
+    public List<ProjectResponse> findAll() {
         List<ProjectModel> modelList = repository.findAll();
-        List<Project> responseList = new ArrayList<>();
+        List<ProjectResponse> responseList = new ArrayList<>();
 
         for (ProjectModel model : modelList) {
             responseList.add(converter.modelToResponse(model));
@@ -43,7 +43,7 @@ public class ProjectService {
         return responseList;
     }
 
-    public Project findById(Long id) throws LpmNoResultException {
+    public ProjectResponse findById(Long id) throws LpmNoResultException {
         Optional<ProjectModel> model = repository.findById(id);
 
         if(model.isPresent()) {

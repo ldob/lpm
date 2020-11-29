@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../service/auth.service';
+import { TokenStorageService } from '../service/token-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -9,49 +8,45 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  form!: FormGroup;
-  public loginInvalid: boolean = false;
-  private formSubmitAttempt: boolean = false;
-  private returnUrl: string = "";
 
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService
-  ) {
-  }
+  form: any = {};
+  isLoggedIn = false;
+  isLoginFailed = false;
+  errorMessage = '';
+  username: string = "";
+  roles: string[] = [];
 
-  async ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/projects';
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) { }
 
-    this.form = this.fb.group({
-      username: ['', Validators.minLength(3)],
-      password: ['', Validators.required]
-    });
+  ngOnInit(): void {
+    if (this.tokenStorage.getToken()) {
+      this.isLoggedIn = true;
 
-    if (await this.authService.checkAuthenticated()) {
-      await this.router.navigate([this.returnUrl]);
+      this.username = this.tokenStorage.getUser().username;
+      this.roles = this.tokenStorage.getUser().roles;
     }
   }
 
-  async onSubmit() {
-    this.loginInvalid = false;
-    this.formSubmitAttempt = false;
-    if (this.form.valid) {
-      try {
-        // TODO
-        // @ts-ignore
-        const username = this.form.get('username').value;
-        // TODO
-        // @ts-ignore
-        const password = this.form.get('password').value;
-        await this.authService.login(username, password);
-      } catch (err) {
-        this.loginInvalid = true;
+  onSubmit(): void {
+    this.authService.login(this.form).subscribe(
+      data => {
+        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveUser({user: data});
+
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.roles = this.tokenStorage.getUser().roles;
+        this.reloadPage();
+      },
+      err => {
+        this.errorMessage = err.error.message;
+        this.isLoginFailed = true;
       }
-    } else {
-      this.formSubmitAttempt = true;
-    }
+    );
   }
+
+  reloadPage(): void {
+    window.location.reload();
+  }
+
 }

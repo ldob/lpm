@@ -1,8 +1,8 @@
-package eu.ldob.lpm.be.entity;
+package eu.ldob.lpm.be.response;
 
 import java.util.Date;
 
-public class Project {
+public class ProjectResponse {
 
     private Long id;
     private String name;

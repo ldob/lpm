@@ -1,28 +1,39 @@
-import { Component } from '@angular/core';
-import {AuthService} from "./auth.service";
+import { Component, OnInit } from '@angular/core';
+import { TokenStorageService } from './service/token-storage.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  title = 'GBF IT Projektmanagement';
+  title = 'GBT IT Projektmanagement';
 
-  isAuthenticated: boolean = false;
+  private roles: string[] = [];
+  isLoggedIn = false;
+  showProjectList = false;
+  showAdminPanel = false;
+  username: string = "";
 
-  constructor(public authService: AuthService) {
-    this.authService.isAuthenticated.subscribe(
-      (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
-    );
+  constructor(private tokenStorageService: TokenStorageService) { }
+
+  ngOnInit(): void {
+    this.isLoggedIn = !!this.tokenStorageService.getToken();
+
+    if (this.isLoggedIn) {
+      const user = this.tokenStorageService.getUser();
+      this.roles = user.roles;
+
+      this.showProjectList = this.roles.includes('ROLE_USER');
+      this.showAdminPanel = this.roles.includes('ROLE_ADMIN');
+
+      this.username = user.username;
+    }
   }
 
-  async ngOnInit() {
-    this.isAuthenticated = await this.authService.checkAuthenticated();
-  }
-
-  logout() {
-    this.authService.logout('/');
+  logout(): void {
+    this.tokenStorageService.signOut();
+    window.location.reload();
   }
 }
