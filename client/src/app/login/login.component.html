@@ -32,6 +32,6 @@
       </mat-error>
       <button mat-raised-button color="primary">Login</button>
     </form>
-    <h2>Sie sind eingeloggt {{ username }} als {{ roles }}</h2>
+    <h2 *ngIf="isLoggedIn">{{ username }} ist eigeloggt als {{ roles }}</h2>
   </mat-card-content>
 </mat-card>

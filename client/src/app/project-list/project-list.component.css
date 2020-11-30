@@ -1,3 +1,25 @@
-.mat-table {
+table {
+  width: calc(100% - 32px);
   margin: 16px;
+}
+
+tr.table-expandable-detail-row {
+  height: 0;
+}
+
+tr.table-expandable-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.table-expandable-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.table-expandable-row td {
+  border-bottom-width: 0;
+}
+
+.table-expandable-detail {
+  overflow: hidden;
+  display: flex;
 }

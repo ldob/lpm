@@ -18,7 +18,9 @@ export class TokenStorageService {
     window.sessionStorage.clear();
   }
 
-  public saveToken(token: string): void {
+  // @ts-ignore
+  // TODO
+  public saveToken(token): void {
     window.sessionStorage.removeItem(TOKEN_KEY);
     window.sessionStorage.setItem(TOKEN_KEY, token);
   }
@@ -31,9 +33,9 @@ export class TokenStorageService {
 
   // @ts-ignore
   // TODO
-  public saveUser(user): void {
+  public saveUser(data): void {
     window.sessionStorage.removeItem(USER_KEY);
-    window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+    window.sessionStorage.setItem(USER_KEY, JSON.stringify(data));
   }
 
   public getUser(): any {
