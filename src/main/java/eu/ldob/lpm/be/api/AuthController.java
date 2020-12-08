@@ -1,11 +1,11 @@
-package eu.ldob.lpm.be.controller;
+package eu.ldob.lpm.be.api;
 
-import eu.ldob.lpm.be.model.ERole;
+import eu.ldob.lpm.be.model.type.ERole;
 import eu.ldob.lpm.be.model.RoleModel;
 import eu.ldob.lpm.be.model.UserModel;
 import eu.ldob.lpm.be.repository.RoleRepository;
 import eu.ldob.lpm.be.repository.UserRepository;
-import eu.ldob.lpm.be.request.JwtResponse;
+import eu.ldob.lpm.be.response.JwtResponse;
 import eu.ldob.lpm.be.request.LoginRequest;
 import eu.ldob.lpm.be.request.SignupRequest;
 import eu.ldob.lpm.be.response.AuthenticationResponse;

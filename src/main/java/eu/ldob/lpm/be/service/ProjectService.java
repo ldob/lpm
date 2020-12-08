@@ -1,17 +1,21 @@
 package eu.ldob.lpm.be.service;
 
 import eu.ldob.lpm.be.converter.ProjectConverter;
-import eu.ldob.lpm.be.response.ProjectResponse;
 import eu.ldob.lpm.be.exception.LpmNoResultException;
+import eu.ldob.lpm.be.model.AssignedProjectModel;
 import eu.ldob.lpm.be.model.ProjectModel;
+import eu.ldob.lpm.be.model.UserModel;
+import eu.ldob.lpm.be.model.type.EProjectRole;
+import eu.ldob.lpm.be.repository.AssignedProjectRepository;
 import eu.ldob.lpm.be.repository.ProjectRepository;
+import eu.ldob.lpm.be.repository.UserRepository;
 import eu.ldob.lpm.be.request.ProjectRequest;
+import eu.ldob.lpm.be.response.ProjectListResponse;
+import eu.ldob.lpm.be.response.ProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,34 +26,63 @@ public class ProjectService {
     @Autowired
     ProjectConverter converter;
     @Autowired
-    ProjectRepository repository;
+    ProjectRepository projectRepository;
+    @Autowired
+    AssignedProjectRepository assignedProjectRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public ProjectResponse add(final ProjectRequest request) {
         ProjectModel model = converter.requestToModel(request);
 
-        model.setStartDate(new Date());
-
-        return converter.modelToResponse(repository.save(model));
+        return converter.modelToResponse(projectRepository.save(model));
     }
 
-    public List<ProjectResponse> findAll() {
-        List<ProjectModel> modelList = repository.findAll();
-        List<ProjectResponse> responseList = new ArrayList<>();
+    public ProjectListResponse findAll(UserModel user) {
+        List<AssignedProjectModel> assignedProjects = assignedProjectRepository.findByUser(user);
 
-        for (ProjectModel model : modelList) {
-            responseList.add(converter.modelToResponse(model));
+        ProjectListResponse responseList = new ProjectListResponse();
+        for (AssignedProjectModel model : assignedProjects) {
+            responseList.addProject(model.getRole(), converter.modelToResponse(model.getProject()));
         }
 
         return responseList;
     }
 
     public ProjectResponse findById(Long id) throws LpmNoResultException {
-        Optional<ProjectModel> model = repository.findById(id);
-
+        Optional<ProjectModel> model = projectRepository.findById(id);
         if(model.isPresent()) {
             return converter.modelToResponse(model.get());
         }
 
-        throw new LpmNoResultException("Project not found");
+        throw new LpmNoResultException("Project " + id + " not found");
+    }
+
+    public void addMember(Long projectId, Long memberId, EProjectRole role) {
+        Optional<ProjectModel> project = projectRepository.findById(projectId);
+        if(project.isEmpty()) {
+            throw new LpmNoResultException("Project not found");
+        }
+
+        Optional<UserModel> user = userRepository.findById(memberId);
+        if(user.isEmpty()) {
+            throw new LpmNoResultException("Member not found");
+        }
+
+        project.get().addAssignedUser(new AssignedProjectModel(project.get(), user.get(), role));
+    }
+
+    public void removeMember(Long projectId, Long memberId, EProjectRole role) {
+        Optional<ProjectModel> project = projectRepository.findById(projectId);
+        if(project.isEmpty()) {
+            throw new LpmNoResultException("Project not found");
+        }
+
+        Optional<UserModel> user = userRepository.findById(memberId);
+        if(user.isEmpty()) {
+            throw new LpmNoResultException("Member not found");
+        }
+
+        project.get().removeAssignedUser(new AssignedProjectModel(project.get(), user.get(), role));
     }
 }

@@ -7,6 +7,10 @@ tr.table-expandable-detail-row {
   height: 0;
 }
 
+tr.table-expandable-row {
+  cursor: pointer;
+}
+
 tr.table-expandable-row:not(.example-expanded-row):hover {
   background: whitesmoke;
 }

@@ -1,6 +1,7 @@
 package eu.ldob.lpm.be.request;
 
-import javax.persistence.Column;
+import eu.ldob.lpm.be.model.type.EPriority;
+
 import java.util.Date;
 
 public class ProjectRequest {
@@ -8,9 +9,11 @@ public class ProjectRequest {
     private Long id;
     private String name;
     private String description;
+    private EPriority priority;
     private Date startDate;
     private Date plannedEndDate;
     private Date endDate;
+    private Float resourceBudget;
 
     public ProjectRequest() {
     }
@@ -39,6 +42,14 @@ public class ProjectRequest {
         this.description = description;
     }
 
+    public EPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(EPriority priority) {
+        this.priority = priority;
+    }
+
     public Date getStartDate() {
         return startDate;
     }
@@ -61,5 +72,13 @@ public class ProjectRequest {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Float getResourceBudget() {
+        return resourceBudget;
+    }
+
+    public void setResourceBudget(Float resourceBudget) {
+        this.resourceBudget = resourceBudget;
     }
 }

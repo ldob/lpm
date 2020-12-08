@@ -14,7 +14,7 @@ export class TokenStorageService {
 
   constructor() { }
 
-  signOut(): void {
+  logout(): void {
     window.sessionStorage.clear();
   }
 

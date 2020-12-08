@@ -1,4 +1,4 @@
-package eu.ldob.lpm.be.model;
+package eu.ldob.lpm.be.model.type;
 
 public enum ERole {
     ROLE_LOGIN,

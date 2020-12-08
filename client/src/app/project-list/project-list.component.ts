@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ProjectService} from '../service/project.service';
-import {Observable} from 'rxjs';
+import {NextObserver, Observable} from 'rxjs';
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {LogService} from "../service/log.service";
+import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'app-project-list',
@@ -17,20 +19,47 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 })
 export class ProjectListComponent implements OnInit {
 
-  projects$: Observable<any>;
+  projectList$: Observable<any>;
 
-  constructor(private projectData: ProjectService) {
-    this.projects$ = this.projectData.getProjects();
+  constructor(private projectService: ProjectService, private log: LogService) {
+    /*
+    this.projectList$ = projectService.getProjects();
+    this.projectList$.subscribe(data => this.log.info("getProjects", data));
+    */
+    this.projectList$ = new Observable<any>();
   }
 
-  columnsToDisplay = ['name', 'description'];
-  displayName : any = {
-    'name': 'Projekt',
-    'description': 'Beschreibung'
-  };
+  columnsToDisplay = ['name', 'description', 'priority', 'startDate', 'plannedEndDate', 'status'];
   expandedElement: null;
 
   ngOnInit(): void {
+    this.projectService.getProjects().subscribe(
+      data => {
+        let projectList: any[] = [];
+        for (let key of Object.keys(data)) {
+
+          // @ts-ignore
+          for (let i = 0; i < data[key].length; i++) {
+            // @ts-ignore
+            projectList.push(data[key][i]);
+          }
+        }
+
+        this.projectList$ = new Observable<any>((observer) => {
+          observer.next(projectList);
+          observer.complete();
+        });
+      }
+    );
+  }
+
+  public orderByPriority(a: KeyValue<"key" | "value", unknown>, b: KeyValue<"key" | "value", unknown>) {
+    //this.log.debug("orderProjectsByPriority", a, b);
+    return 1;
+  }
+
+  public tmp(o: any) {
+    this.log.debug("tmp", o);
   }
 
 }

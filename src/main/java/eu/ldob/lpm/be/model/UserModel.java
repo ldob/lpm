@@ -1,12 +1,13 @@
 package eu.ldob.lpm.be.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(	name = "users",
@@ -14,13 +15,13 @@ import javax.validation.constraints.Size;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-public class UserModel {
+public class UserModel extends AModel<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(min = 3, max = 6)
     private String username;
 
     @NotBlank
@@ -29,7 +30,7 @@ public class UserModel {
     private String email;
 
     @NotBlank
-    @Size(max = 120)
+    @Size(min = 6, max = 120)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -37,6 +38,13 @@ public class UserModel {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleModel> roles = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<AssignedProjectModel> assignedProjects = new ArrayList<>();
 
     public UserModel() {
     }
@@ -47,6 +55,7 @@ public class UserModel {
         this.password = password;
     }
 
+    @Override
     public Long getId() {
         return id;
     }

@@ -1,6 +1,6 @@
 import {AppComponent} from './app.component';
 
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -34,7 +34,13 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProjectListComponent } from './project-list/project-list.component';
+import { NotAllowedComponent } from './not-allowed/not-allowed.component';
+import {LogService} from "./service/log.service";
 
+
+import localeDe from '@angular/common/locales/de';
+import {registerLocaleData} from "@angular/common";
+registerLocaleData(localeDe);
 
 
 
@@ -45,7 +51,8 @@ import { ProjectListComponent } from './project-list/project-list.component';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    ProjectListComponent
+    ProjectListComponent,
+    NotAllowedComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +85,11 @@ import { ProjectListComponent } from './project-list/project-list.component';
     MatListModule,
     MatGridListModule
   ],
-  providers: [authInterceptorProviders],
+  providers: [
+    authInterceptorProviders,
+    { provide: LOCALE_ID, useValue: 'de-AT'},
+    LogService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

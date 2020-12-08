@@ -1,10 +1,12 @@
 package eu.ldob.lpm.be.model;
 
+import eu.ldob.lpm.be.model.type.ERole;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
-public class RoleModel {
+public class RoleModel extends AModel<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,12 +21,9 @@ public class RoleModel {
         this.name = name;
     }
 
+    @Override
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public ERole getName() {

@@ -1,11 +1,16 @@
 package eu.ldob.lpm.be.model;
 
+import eu.ldob.lpm.be.model.type.EPriority;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="project")
-public class ProjectModel {
+public class ProjectModel extends AModel<Long> {
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
@@ -18,6 +23,9 @@ public class ProjectModel {
     private String description;
 
     @Column
+    private EPriority priority;
+
+    @Column
     private Date startDate;
 
     @Column
@@ -26,9 +34,27 @@ public class ProjectModel {
     @Column
     private Date endDate;
 
+    @Column
+    private Float resourceBudget;
+
+    @OneToMany(
+        mappedBy = "project",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<AssignedProjectModel> assignedUsers = new ArrayList<>();
+
+    @OneToMany(
+        mappedBy = "project",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<ProjectTodoModel> todos = new ArrayList<>();
+
     public ProjectModel() {
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -53,6 +79,14 @@ public class ProjectModel {
         this.description = description;
     }
 
+    public EPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(EPriority priority) {
+        this.priority = priority;
+    }
+
     public Date getStartDate() {
         return startDate;
     }
@@ -75,5 +109,37 @@ public class ProjectModel {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Float getResourceBudget() {
+        return resourceBudget;
+    }
+
+    public void setResourceBudget(Float resourceBudget) {
+        this.resourceBudget = resourceBudget;
+    }
+
+    public List<AssignedProjectModel> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public void setAssignedUsers(List<AssignedProjectModel> assignedUsers) {
+        this.assignedUsers = assignedUsers;
+    }
+
+    public void addAssignedUser(AssignedProjectModel assignedProjectModel) {
+        this.assignedUsers.add(assignedProjectModel);
+    }
+
+    public void removeAssignedUser(AssignedProjectModel assignedProjectModel) {
+        this.assignedUsers.remove(assignedProjectModel);
+    }
+
+    public List<ProjectTodoModel> getTodos() {
+        return todos;
+    }
+
+    public void setTodos(List<ProjectTodoModel> todos) {
+        this.todos = todos;
     }
 }

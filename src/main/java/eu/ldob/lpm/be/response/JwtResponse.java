@@ -1,4 +1,4 @@
-package eu.ldob.lpm.be.request;
+package eu.ldob.lpm.be.response;
 
 import java.util.List;
 

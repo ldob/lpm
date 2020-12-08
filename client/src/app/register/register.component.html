@@ -1,1 +1,61 @@
-<p>register works!</p>
+<mat-card>
+  <mat-card-content>
+    <form *ngIf="!isSuccessful"
+          name="form"
+          (ngSubmit)="f.form.valid && onSubmit()"
+          #f="ngForm"
+          novalidate>
+      <h2>Resistrierung</h2>
+      <mat-form-field class="full-width-input">
+        <input matInput
+               placeholder="Benutzername"
+               type="text"
+               class="form-control"
+               name="username"
+               [(ngModel)]="form.username"
+               required
+               minlength="3"
+               maxlength="5"
+               #username="ngModel">
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput
+             placeholder="E-Mail"
+             type="email"
+             class="form-control"
+             name="email"
+             [(ngModel)]="form.email"
+             required
+             email
+             #email="ngModel">
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput
+               placeholder="Passwort"
+               type="password"
+               class="form-control"
+               name="password"
+               [(ngModel)]="form.password"
+               required
+               minlength="6"
+               #password="ngModel">
+      </mat-form-field>
+      <mat-error *ngIf="f.submitted && username.invalid">
+        Benutzername muss 3-5 Zeichen lang sein
+      </mat-error>
+      <mat-error *ngIf="f.submitted && email.invalid">
+        E-Mail Adresse ungültig
+      </mat-error>
+      <mat-error *ngIf="f.submitted && password.invalid">
+        Passwort muss mindestens 6 Zeichen lang sein
+      </mat-error>
+      <button mat-raised-button color="primary">Registrieren</button>
+
+      <h2 *ngIf="f.submitted && isSignUpFailed">Registrierung fehlgeschlagen<br/>>{{errorMessage}}</h2>
+    </form>
+    <div *ngIf="isSuccessful">
+      <h2>Registrierung erfolgreich</h2>
+      <button mat-raised-button color="primary" routerLink="/login">Login</button>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -6,6 +6,7 @@ import { LoginComponent } from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {ProfileComponent} from "./profile/profile.component";
 import { ProjectListComponent } from './project-list/project-list.component';
+import {NotAllowedComponent} from "./not-allowed/not-allowed.component";
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -13,7 +14,9 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'projects', component: ProjectListComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full' }
+  { path: 'not_allowed', component: NotAllowedComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home' }
 ];
 
 
