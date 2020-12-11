@@ -1,14 +1,19 @@
 table {
   width: calc(100% - 32px);
+  min-width: 500px;
+  overflow-x: auto;
+  overflow-y: hidden;
   margin: 16px;
+}
+
+th.mat-header-cell {
+  text-align: left;
+  min-width: 24px;
+  max-width: 250px;
 }
 
 tr.table-expandable-detail-row {
   height: 0;
-}
-
-tr.table-expandable-row {
-  cursor: pointer;
 }
 
 tr.table-expandable-row:not(.example-expanded-row):hover {
@@ -26,4 +31,8 @@ tr.table-expandable-row:not(.example-expanded-row):active {
 .table-expandable-detail {
   overflow: hidden;
   display: flex;
+}
+
+mat-icon.icon-button {
+  cursor: pointer;
 }

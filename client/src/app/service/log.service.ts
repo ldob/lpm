@@ -41,10 +41,11 @@ export class LogService {
 
   writeToLog(msg: string, level: LogLevel, ...optionalParams: any[]) {
     if(level >= this.currentLogLevel) {
-      console.log(formatDate(new Date(), "y-MM-dd HH:mm:ss.SSS", "de-AT") + ": " + msg);
+      let logText: string = formatDate(new Date(), "y-MM-dd HH:mm:ss.SSS", "de-AT") + ": " + msg;
       optionalParams.forEach(function(param) {
-        console.log(typeof(param) + " --> " + JSON.stringify(param));
+        logText += "\n" + typeof(param) + " --> " + JSON.stringify(param);
       });
+      console.log(logText);
     }
 
   }

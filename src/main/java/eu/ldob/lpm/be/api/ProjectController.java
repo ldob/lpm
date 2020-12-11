@@ -26,8 +26,31 @@ public class ProjectController extends AController{
             consumes = MediaType.APPLICATION_JSON
     )
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> add(@RequestBody ProjectRequest request) {
-        return ResponseEntity.ok(service.add(request));
+    public ResponseEntity<?> add(@RequestBody ProjectRequest request, @AuthenticationPrincipal UserDetailsImpl user) {
+        try {
+            return ResponseEntity.ok(service.save(request, getUserModel(user)));
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @PostMapping(
+            path = "/update",
+            consumes = MediaType.APPLICATION_JSON
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> update(@RequestBody ProjectRequest request, @AuthenticationPrincipal UserDetailsImpl user) {
+        try {
+            return ResponseEntity.ok(service.save(request, getUserModel(user)));
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping(

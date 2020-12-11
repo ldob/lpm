@@ -4,12 +4,59 @@
   {{tmp(projects)}}
   {{tmp(projects.value)}}
   -->
-  <table mat-table [dataSource]="projectList$ | async" multiTemplateDataRows class="mat-elevation-z8">
-    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-      <th mat-header-cell *matHeaderCellDef i18n> {{column}} </th>
-      <td mat-cell *matCellDef="let element"> {{element[column]}} {{tmp(element)}}</td>
+<div fxLayout fxLayoutAlign="center center">
+  <mat-form-field fxFlex="60%">
+    <input matInput
+           type="text"
+           (keyup)="doFilter($event.target)"
+           placeholder="Filter">
+  </mat-form-field>
+</div>
 
+  <table mat-table [dataSource]="projectList$" multiTemplateDataRows matSort class="mat-elevation-z8">
 
+    <ng-container matColumnDef="action_pre">
+      <th mat-header-cell *matHeaderCellDef style="width: 36px">
+        <mat-icon  routerLink="/project" class="icon-button">add</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon (click)="expandedElement = expandedElement === element ? null : element" class="icon-button">{{expandedElement === element ? 'expand_less' : 'expand_more'}}</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 48px">Prio</th>
+      <td mat-cell *matCellDef="let element">{{element.priority}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="project">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Projekt</th>
+      <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 100px">Von</th>
+      <td mat-cell *matCellDef="let element">{{element.startDate | date}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="endDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 100px">Bis</th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.endDate"><b>{{element.endDate | date}}</b></span>
+        <span *ngIf="!element.endDate">{{element.plannedEndDate | date}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef style="width: 80px">Status</th>
+      <td mat-cell *matCellDef="let element">{{element.status}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="action_post">
+      <th mat-header-cell *matHeaderCellDef style="width: 24px"></th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon routerLink="/project/{{element.id}}" class="icon-button">edit</mat-icon>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
@@ -26,11 +73,11 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
-        class="table-expandable-row"
-        [class.example-expanded-row]="expandedElement === element"
-        (click)="expandedElement = expandedElement === element ? null : element">
-    </tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="table-expandable-row"  [class.example-expanded-row]="expandedElement === element"></tr>
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="table-expandable-detail-row"></tr>
+
   </table>
+
+  <mat-paginator [pageSize]="20"></mat-paginator>
+
 <!-- </div> -->

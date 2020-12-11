@@ -5,7 +5,7 @@
       <button mat-button routerLink="projects" *ngIf="isLoggedIn"><mat-icon>assignment</mat-icon></button>
       <button mat-button routerLink="profile" *ngIf="isLoggedIn"><mat-icon>how_to_reg</mat-icon></button>
     </span>
-  <div fxLayout="row" fxShow="false" fxShow.gt-sm>
+  <div fxLayout="row">
     <button mat-button href="/login" routerLink="login" *ngIf="!isLoggedIn">
       <mat-icon>power_settings_new</mat-icon>
       Login
@@ -15,27 +15,5 @@
       Logout
     </button>
   </div>
-  <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
-    <mat-icon>menu</mat-icon>
-  </button>
 </mat-toolbar>
-<mat-menu x-position="before" #menu="matMenu">
-  <button mat-menu-item href="/home" routerLink="home">
-    <mat-icon>home</mat-icon>
-  </button>
-  <button mat-menu-item href="/projects" routerLink="projects" *ngIf="isLoggedIn">
-    <mat-icon>list</mat-icon>
-  </button>
-  <button mat-menu-item href="/profile" routerLink="profile" *ngIf="isLoggedIn">
-    <mat-icon>list</mat-icon>
-  </button>
-  <button mat-menu-item href="/login" routerLink="login" *ngIf="!isLoggedIn">
-    <mat-icon>power_settings_new</mat-icon>
-    Login
-  </button>
-  <button mat-menu-item *ngIf="isLoggedIn" (click)="logout()">
-    <mat-icon>exit_to_app</mat-icon>
-    Logout
-  </button>
-</mat-menu>
 <router-outlet></router-outlet>

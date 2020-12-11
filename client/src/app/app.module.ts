@@ -25,9 +25,10 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
-import {MatOptionModule} from "@angular/material/core";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {MatListModule} from "@angular/material/list";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -40,6 +41,7 @@ import {LogService} from "./service/log.service";
 
 import localeDe from '@angular/common/locales/de';
 import {registerLocaleData} from "@angular/common";
+import {ProjectComponent} from './project/project.component';
 registerLocaleData(localeDe);
 
 
@@ -52,7 +54,8 @@ registerLocaleData(localeDe);
     RegisterComponent,
     ProfileComponent,
     ProjectListComponent,
-    NotAllowedComponent
+    NotAllowedComponent,
+    ProjectComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +86,9 @@ registerLocaleData(localeDe);
     MatPaginatorModule,
     MatSortModule,
     MatListModule,
-    MatGridListModule
+    MatGridListModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
     authInterceptorProviders,

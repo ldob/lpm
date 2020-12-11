@@ -32,10 +32,24 @@ public class ProjectService {
     @Autowired
     UserRepository userRepository;
 
-    public ProjectResponse add(final ProjectRequest request) {
+    public ProjectResponse save(ProjectRequest request, UserModel user) {
         ProjectModel model = converter.requestToModel(request);
 
-        return converter.modelToResponse(projectRepository.save(model));
+        if(request.getId() != null) {
+            Optional<ProjectModel> p = projectRepository.findById(request.getId());
+            if (p.isPresent()) {
+                model.setAssignedUsers(p.get().getAssignedUsers());
+                model.setTodos(p.get().getTodos());
+            }
+        }
+
+        model = projectRepository.save(model);
+
+        if(model.getAssignedUsers().size() < 1) {
+            model.addAssignedUser(new AssignedProjectModel(model, user, EProjectRole.MANAGE));
+        }
+
+        return converter.modelToResponse(model);
     }
 
     public ProjectListResponse findAll(UserModel user) {

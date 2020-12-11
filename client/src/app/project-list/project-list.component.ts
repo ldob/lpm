@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ProjectService} from '../service/project.service';
-import {NextObserver, Observable} from 'rxjs';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {LogService} from "../service/log.service";
-import {KeyValue} from "@angular/common";
+import {IProject} from "../entity/project";
+import {MatSort} from "@angular/material/sort";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-project-list',
@@ -17,49 +19,57 @@ import {KeyValue} from "@angular/common";
     ]),
   ],
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent implements OnInit, AfterViewInit {
 
-  projectList$: Observable<any>;
+  projectList$: MatTableDataSource<IProject>;
+
+  columnsToDisplay = ['action_pre', 'priority', 'project', 'startDate', 'endDate', 'status', 'action_post'];
+  expandedElement: null;
+
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(private projectService: ProjectService, private log: LogService) {
+    // TODO refactor
     /*
     this.projectList$ = projectService.getProjects();
     this.projectList$.subscribe(data => this.log.info("getProjects", data));
     */
-    this.projectList$ = new Observable<any>();
+    this.projectList$ = new MatTableDataSource<IProject>();
   }
-
-  columnsToDisplay = ['name', 'description', 'priority', 'startDate', 'plannedEndDate', 'status'];
-  expandedElement: null;
 
   ngOnInit(): void {
     this.projectService.getProjects().subscribe(
       data => {
-        let projectList: any[] = [];
-        for (let key of Object.keys(data)) {
-
-          // @ts-ignore
-          for (let i = 0; i < data[key].length; i++) {
-            // @ts-ignore
-            projectList.push(data[key][i]);
+        let projectList: IProject[] = [];
+        Object.entries(data).forEach(
+          ([key, value]) => {
+            for (let i = 0; i < value.length; i++) {
+              projectList.push(value[i] as IProject);
+            }
           }
-        }
+        );
 
-        this.projectList$ = new Observable<any>((observer) => {
-          observer.next(projectList);
-          observer.complete();
-        });
+        this.projectList$.data = projectList as IProject[];
       }
     );
   }
 
-  public orderByPriority(a: KeyValue<"key" | "value", unknown>, b: KeyValue<"key" | "value", unknown>) {
-    //this.log.debug("orderProjectsByPriority", a, b);
-    return 1;
+  ngAfterViewInit() {
+    this.projectList$.sort = this.sort;
+    this.projectList$.paginator = this.paginator;
   }
 
-  public tmp(o: any) {
-    this.log.debug("tmp", o);
+  public doFilter = (target: EventTarget | null) => {
+    let element = target as HTMLInputElement;
+    this.projectList$.filter = element.value.trim().toLocaleLowerCase();
   }
 
+  addProject(): void {
+    alert();
+  }
+
+  editProject(id: number): void {
+    alert(id);
+  }
 }
