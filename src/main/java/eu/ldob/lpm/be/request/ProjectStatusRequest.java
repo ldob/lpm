@@ -1,55 +1,24 @@
-package eu.ldob.lpm.be.model;
+package eu.ldob.lpm.be.request;
 
 import eu.ldob.lpm.be.model.type.EProjectStatus;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="project_status")
-public class ProjectStatusModel extends AModel<Long> {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column
+public class ProjectStatusRequest {
+
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name="project_id", nullable=false)
-    private ProjectModel project;
-
-    @Column
     private Date date;
-
-    @Column
     private EProjectStatus status;
-
-    @Column
     private String tweet;
-
-    @Column
     private String nextSteps;
-
-    @Column
     private String problems;
 
-    public ProjectStatusModel() {
-    }
-
-    @Override
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public ProjectModel getProject() {
-        return project;
-    }
-
-    public void setProject(ProjectModel project) {
-        this.project = project;
     }
 
     public Date getDate() {

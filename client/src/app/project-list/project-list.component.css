@@ -1,9 +1,9 @@
 table {
-  width: calc(100% - 32px);
+  width: calc(100% - 4em);
   min-width: 500px;
   overflow-x: auto;
   overflow-y: hidden;
-  margin: 16px;
+  margin: 2em;
 }
 
 th.mat-header-cell {
@@ -31,8 +31,4 @@ tr.table-expandable-row:not(.example-expanded-row):active {
 .table-expandable-detail {
   overflow: hidden;
   display: flex;
-}
-
-mat-icon.icon-button {
-  cursor: pointer;
 }

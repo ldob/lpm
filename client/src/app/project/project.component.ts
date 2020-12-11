@@ -49,7 +49,7 @@ export class ProjectComponent implements OnInit {
       );
     }
     else {
-      this.projectService.editProject(this.project).subscribe(
+      this.projectService.addProject(this.project).subscribe(
         data => {
           let p = data as IProject;
           //this.router.navigate(['/project/', p.id]);

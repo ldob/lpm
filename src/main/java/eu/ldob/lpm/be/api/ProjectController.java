@@ -74,9 +74,14 @@ public class ProjectController extends AController{
             produces = MediaType.APPLICATION_JSON
     )
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl user) {
         try {
-            return ResponseEntity.ok(service.findById(id));
+            return ResponseEntity.ok(service.findById(id, getUserModel(user)));
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
         catch (LpmNoResultException e) {
             return ResponseEntity
@@ -89,12 +94,12 @@ public class ProjectController extends AController{
             path = "/{projectId}/addMember/{memberId}",
             produces = MediaType.APPLICATION_JSON
     )
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addMember(@PathVariable Long projectId, @PathVariable Long memberId, @RequestBody EProjectRole role) {
         try {
             service.addMember(projectId, memberId, role);
 
-            return ResponseEntity.ok(service.findById(projectId));
+            return ResponseEntity.ok(service.findByIdInternal(projectId));
         }
         catch (LpmNoResultException e) {
             return ResponseEntity
@@ -107,12 +112,12 @@ public class ProjectController extends AController{
             path = "/{projectId}/deleteMember/{memberId}",
             produces = MediaType.APPLICATION_JSON
     )
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> removeMember(@PathVariable Long projectId, @PathVariable Long memberId, @RequestBody EProjectRole role) {
         try {
             service.removeMember(projectId, memberId, role);
 
-            return ResponseEntity.ok(service.findById(projectId));
+            return ResponseEntity.ok(service.findByIdInternal(projectId));
         }
         catch (LpmNoResultException e) {
             return ResponseEntity

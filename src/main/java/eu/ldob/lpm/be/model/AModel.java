@@ -13,7 +13,7 @@ public abstract class AModel<T> {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        AssignedProjectModel that = (AssignedProjectModel) o;
+        AModel that = (AModel) o;
         return Objects.equals(this.getId(), that.getId());
     }
 

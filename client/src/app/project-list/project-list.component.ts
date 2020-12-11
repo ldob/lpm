@@ -51,6 +51,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
         );
 
         this.projectList$.data = projectList as IProject[];
+        this.log.debug("getProjects", this.projectList$.data);
       }
     );
   }
@@ -63,13 +64,5 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   public doFilter = (target: EventTarget | null) => {
     let element = target as HTMLInputElement;
     this.projectList$.filter = element.value.trim().toLocaleLowerCase();
-  }
-
-  addProject(): void {
-    alert();
-  }
-
-  editProject(id: number): void {
-    alert(id);
   }
 }

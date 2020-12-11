@@ -38,6 +38,13 @@ public class ProjectModel extends AModel<Long> {
     private Float resourceBudget;
 
     @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<ProjectStatusModel> status = new ArrayList<>();
+
+    @OneToMany(
         mappedBy = "project",
         cascade = CascadeType.ALL,
         orphanRemoval = true
@@ -117,6 +124,22 @@ public class ProjectModel extends AModel<Long> {
 
     public void setResourceBudget(Float resourceBudget) {
         this.resourceBudget = resourceBudget;
+    }
+
+    public List<ProjectStatusModel> getStatus() {
+        return status;
+    }
+
+    public void setStatus(List<ProjectStatusModel> status) {
+        this.status = status;
+    }
+
+    public void addStatus(ProjectStatusModel status) {
+        this.status.add(status);
+    }
+
+    public void removeStatus(ProjectStatusModel status) {
+        this.status.remove(status);
     }
 
     public List<AssignedProjectModel> getAssignedUsers() {

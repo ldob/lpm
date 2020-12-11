@@ -35,13 +35,14 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProjectListComponent } from './project-list/project-list.component';
-import { NotAllowedComponent } from './not-allowed/not-allowed.component';
 import {LogService} from "./service/log.service";
 
 
 import localeDe from '@angular/common/locales/de';
 import {registerLocaleData} from "@angular/common";
 import {ProjectComponent} from './project/project.component';
+import { ProjectStatusComponent } from './project-status/project-status.component';
+import { ErrorComponent } from './error/error.component';
 registerLocaleData(localeDe);
 
 
@@ -54,8 +55,9 @@ registerLocaleData(localeDe);
     RegisterComponent,
     ProfileComponent,
     ProjectListComponent,
-    NotAllowedComponent,
-    ProjectComponent
+    ProjectComponent,
+    ProjectStatusComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

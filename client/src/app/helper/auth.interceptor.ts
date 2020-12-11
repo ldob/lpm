@@ -6,12 +6,13 @@ import { TokenStorageService } from '../service/token-storage.service';
 import { Observable } from 'rxjs';
 import {catchError} from "rxjs/operators";
 import {Router} from "@angular/router";
+import {LogService} from "../service/log.service";
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private token: TokenStorageService, private router: Router) { }
+  constructor(private token: TokenStorageService, private log: LogService, private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authRequest = request;
@@ -23,13 +24,13 @@ export class AuthInterceptor implements HttpInterceptor {
       .pipe(catchError(error => new Observable<HttpEvent<any>>(observer => {
         if(error instanceof HttpErrorResponse) {
           const errorResponse = <HttpErrorResponse>error;
-          console.log(errorResponse.status);
+          this.log.warn("http status error", errorResponse.status);
           if(errorResponse.status === 401) {
             this.token.logout();
-            this.router.navigate(['login']);
+            this.router.navigate(['error', errorResponse.status]);
           }
-          if(errorResponse.status === 403) {
-            this.router.navigate(['not_allowed']);
+          else {
+            this.router.navigate(['error', errorResponse.status]);
           }
           observer.error(error);
           observer.complete();

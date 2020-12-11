@@ -32,6 +32,32 @@
         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
         <mat-datepicker #startDate></mat-datepicker>
       </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>geplantes Ende</mat-label>
+        <input matInput
+               [matDatepicker]="plannedEndDate"
+               name="startDate"
+               [(ngModel)]="project.plannedEndDate">
+        <mat-datepicker-toggle matSuffix [for]="plannedEndDate"></mat-datepicker-toggle>
+        <mat-datepicker #plannedEndDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput
+               placeholder="Status"
+               type="text"
+               class="form-control"
+               name="status"
+               [(ngModel)]="project.status">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Abschluss</mat-label>
+        <input matInput
+               [matDatepicker]="endDate"
+               name="startDate"
+               [(ngModel)]="project.endDate">
+        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+        <mat-datepicker #endDate></mat-datepicker>
+      </mat-form-field>
       <button mat-raised-button color="primary">Speichern</button>
     </form>
   </mat-card-content>

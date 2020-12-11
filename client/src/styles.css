@@ -11,3 +11,16 @@ h1 {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:focus {
+  outline: none;
+}
+
+mat-icon.icon-button {
+  cursor: pointer;
+}
+
+mat-icon.icon-secondary,
+:focus {
+  color: #E91E63;
+}
