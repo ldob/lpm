@@ -17,6 +17,7 @@ export class ProjectStatusComponent implements OnInit {
   id: number | null;
   project: IProject;
   projectStatusList$: MatTableDataSource<IProjectStatus>;
+  statusList: Array<string>;
 
   columnsToDisplay = ['date', 'action_post'];
   selectedProjectStatus: IProjectStatus | null;
@@ -25,6 +26,7 @@ export class ProjectStatusComponent implements OnInit {
     this.id = null;
     this.project = new Project();
     this.projectStatusList$ = new MatTableDataSource<IProjectStatus>();
+    this.statusList = [];
     this.selectedProjectStatus = null;
   }
 
@@ -44,12 +46,23 @@ export class ProjectStatusComponent implements OnInit {
             data => {
               this.projectStatusList$.data = data as IProjectStatus[];
               this.log.debug("getProjectStatus", this.projectStatusList$.data);
+
+              if(this.projectStatusList$.data.length > 0) {
+                this.setSelectedProjectStatus(this.projectStatusList$.data[0]);
+              }
             }
           );
         }
         else {
           this.router.navigateByUrl('/projects');
         }
+      }
+    );
+
+    this.projectStatusService.getStatus().subscribe(
+      data => {
+        this.statusList = data as Array<string>;
+        this.log.debug("getStatus", this.statusList);
       }
     );
   }

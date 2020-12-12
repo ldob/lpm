@@ -24,4 +24,8 @@ export class ProjectStatusService {
   editProjectStatus(projectId: number, project: IProjectStatus) {
     return this.http.post('/api/project/' + projectId + '/status/update', project);
   }
+
+  getStatus() {
+    return this.http.get('/api/values/status');
+  }
 }

@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping("/api/project/{projectId}/status")
-public class ProjectStatusController extends AController{
+public class ProjectStatusController extends AController {
 
     @Autowired
     private ProjectStatusService service;
@@ -27,8 +27,7 @@ public class ProjectStatusController extends AController{
     public ResponseEntity<?> getAll(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl user) {
         try {
             return ResponseEntity.ok(service.findAll(projectId, getUserModel(user)));
-        }
-        catch (LpmNotAllowedException e) {
+        } catch (LpmNotAllowedException e) {
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
@@ -43,8 +42,7 @@ public class ProjectStatusController extends AController{
     public ResponseEntity<?> getLatest(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl user) {
         try {
             return ResponseEntity.ok(service.findLatest(projectId, getUserModel(user)));
-        }
-        catch (LpmNotAllowedException e) {
+        } catch (LpmNotAllowedException e) {
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
@@ -59,8 +57,7 @@ public class ProjectStatusController extends AController{
     public ResponseEntity<?> add(@PathVariable Long projectId, @RequestBody ProjectStatusRequest request, @AuthenticationPrincipal UserDetailsImpl user) {
         try {
             return ResponseEntity.ok(service.save(projectId, request, getUserModel(user)));
-        }
-        catch (LpmNotAllowedException e) {
+        } catch (LpmNotAllowedException e) {
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
@@ -75,47 +72,10 @@ public class ProjectStatusController extends AController{
     public ResponseEntity<?> update(@PathVariable Long projectId, @RequestBody ProjectStatusRequest request, @AuthenticationPrincipal UserDetailsImpl user) {
         try {
             return ResponseEntity.ok(service.save(projectId, request, getUserModel(user)));
-        }
-        catch (LpmNotAllowedException e) {
+        } catch (LpmNotAllowedException e) {
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
         }
     }
-
-    /*
-    @PostMapping(
-            path = "/update",
-            consumes = MediaType.APPLICATION_JSON
-    )
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> update(@RequestBody ProjectRequest request, @AuthenticationPrincipal UserDetailsImpl user) {
-        try {
-            return ResponseEntity.ok(service.save(request, getUserModel(user)));
-        }
-        catch (LpmNotAllowedException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-    }
-    */
-
-    /*
-    @GetMapping(
-            path = "/{id}",
-            produces = MediaType.APPLICATION_JSON
-    )
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(service.findById(id));
-        }
-        catch (LpmNoResultException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-    }
-    */
 }

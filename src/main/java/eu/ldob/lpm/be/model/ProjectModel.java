@@ -1,6 +1,7 @@
 package eu.ldob.lpm.be.model;
 
 import eu.ldob.lpm.be.model.type.EPriority;
+import eu.ldob.lpm.be.model.type.EProjectStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -164,5 +165,18 @@ public class ProjectModel extends AModel<Long> {
 
     public void setTodos(List<ProjectTodoModel> todos) {
         this.todos = todos;
+    }
+
+    public EProjectStatus getLatestStatus() {
+        EProjectStatus status = null;
+        Date statusDate = null;
+        for(ProjectStatusModel projectStatus : this.status) {
+            if(statusDate == null || statusDate.before(projectStatus.getDate())) {
+                status = projectStatus.getStatus();
+                statusDate = projectStatus.getDate();
+            }
+        }
+
+        return status;
     }
 }

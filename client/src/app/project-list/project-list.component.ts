@@ -8,6 +8,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {IProjectStatus} from "../entity/project-status";
 import {ProjectStatusService} from "../service/project-status.service";
+import {CheckboxValue} from "../entity/checkbox-value";
 
 @Component({
   selector: 'app-project-list',
@@ -25,22 +26,23 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
 
   projectList$: MatTableDataSource<IProject>;
 
-  columnsToDisplay = ['action_pre', 'priority', 'project', 'startDate', 'endDate', 'status', 'action_post'];
+  columnsToDisplay = ['action_pre', 'priority', 'name', 'startDate', 'endDate', 'status', 'action_post'];
   selectedProject: IProject | null;
   selectedProjectLatestStatus: IProjectStatus | null;
+  statusList: Array<CheckboxValue>;
+  filterText: string;
+  today: Date;
 
   @ViewChild(MatSort) sort: MatSort | null = null;
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(private projectService: ProjectService, private projectStatusService: ProjectStatusService, private log: LogService) {
-    // TODO refactor
-    /*
-    this.projectList$ = projectService.getProjects();
-    this.projectList$.subscribe(data => this.log.info("getProjects", data));
-    */
     this.projectList$ = new MatTableDataSource<IProject>();
     this.selectedProject = null;
     this.selectedProjectLatestStatus = null;
+    this.statusList = [];
+    this.filterText = "";
+    this.today = new Date();
   }
 
   ngOnInit(): void {
@@ -59,16 +61,21 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
         this.log.debug("getProjects", this.projectList$.data);
       }
     );
+
+    this.projectStatusService.getStatus().subscribe(
+      data => {
+        let list = data as Array<string>;
+        list.forEach(item => {
+          this.statusList.push(new CheckboxValue(item, false));
+        });
+        this.log.debug("getStatus", this.statusList);
+      }
+    );
   }
 
   ngAfterViewInit() {
     this.projectList$.sort = this.sort;
     this.projectList$.paginator = this.paginator;
-  }
-
-  public doFilter = (target: EventTarget | null) => {
-    let element = target as HTMLInputElement;
-    this.projectList$.filter = element.value.trim().toLocaleLowerCase();
   }
 
   setSelectedProject(project: IProject): void {
@@ -82,5 +89,21 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
         }
       );
     }
+  }
+
+  doFilter(): void {
+    let filterStatus = '';
+    this.statusList.forEach(status => {
+      if(status.selected) {
+        filterStatus += ' ' + status.name;
+      }
+    });
+    this.projectList$.filter = this.filterText.trim().toLocaleLowerCase() + filterStatus;
+  }
+
+  getDateDiff(date1: Date, date2: Date) {
+    date1 = new Date(date1);
+    date2 = new Date(date2);
+    return Math.ceil(Math.abs(date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
   }
 }

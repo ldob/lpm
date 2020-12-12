@@ -24,6 +24,7 @@ public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectM
         model.setId(request.getId());
         model.setName(request.getName());
         model.setDescription(request.getDescription());
+        model.setPriority(request.getPriority());
         model.setStartDate(request.getStartDate());
         model.setPlannedEndDate(request.getPlannedEndDate());
         model.setEndDate(request.getEndDate());
@@ -39,10 +40,12 @@ public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectM
         response.setId(model.getId());
         response.setName(model.getName());
         response.setDescription(model.getDescription());
+        response.setPriority(model.getPriority());
         response.setStartDate(model.getStartDate());
         response.setPlannedEndDate(model.getPlannedEndDate());
         response.setEndDate(model.getEndDate());
         response.setResourceBudget(model.getResourceBudget());
+        response.setStatus(model.getLatestStatus());
 
         for(AssignedProjectModel assignedUser : model.getAssignedUsers()) {
             response.addAssignedMember(assignedUser.getRole(), memberConverter.modelToResponse(assignedUser.getUser()));

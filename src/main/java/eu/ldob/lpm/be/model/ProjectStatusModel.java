@@ -23,13 +23,13 @@ public class ProjectStatusModel extends AModel<Long> {
     @Column
     private EProjectStatus status;
 
-    @Column
+    @Column(columnDefinition="LONGTEXT")
     private String tweet;
 
-    @Column
+    @Column(columnDefinition="LONGTEXT")
     private String nextSteps;
 
-    @Column
+    @Column(columnDefinition="LONGTEXT")
     private String problems;
 
     public ProjectStatusModel() {

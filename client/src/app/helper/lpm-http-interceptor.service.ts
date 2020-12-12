@@ -7,15 +7,16 @@ import { Observable } from 'rxjs';
 import {catchError, finalize} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {LogService} from "../service/log.service";
+import {LoadingService} from "../service/loading.service";
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
 export class LpmHttpInterceptor implements HttpInterceptor {
-  constructor(private token: TokenStorageService, private loadingScreen: LoadingScreenService, private log: LogService, private router: Router) { }
+  constructor(private token: TokenStorageService, private loadingScreen: LoadingService, private log: LogService, private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    loadingScreen.show();
+    this.loadingScreen.show();
 
     let authRequest = request;
     const token = this.token.getToken();
@@ -39,8 +40,8 @@ export class LpmHttpInterceptor implements HttpInterceptor {
         }
       })))
       .pipe(finalize(() => {
-        loadingScreen.hide();
-      });
+        this.loadingScreen.hide();
+      }));
   }
 }
 

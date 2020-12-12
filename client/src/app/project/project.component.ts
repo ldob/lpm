@@ -14,10 +14,12 @@ export class ProjectComponent implements OnInit {
 
   id: number | null;
   project: IProject;
+  priorityList: Array<string>;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private projectService: ProjectService, private log: LogService) {
     this.id = null;
     this.project = new Project();
+    this.priorityList = [];
   }
 
   ngOnInit(): void {
@@ -35,6 +37,13 @@ export class ProjectComponent implements OnInit {
         else {
           this.project = new Project();
         }
+      }
+    );
+
+    this.projectService.getPriorities().subscribe(
+      data => {
+        this.priorityList = data as Array<string>;
+        this.log.debug("getPriorities", this.priorityList);
       }
     );
   }

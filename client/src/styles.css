@@ -21,6 +21,15 @@ mat-icon.icon-button {
 }
 
 mat-icon.icon-secondary,
-:focus {
+mat-icon.icon-secondary:focus {
   color: #E91E63;
+}
+
+.mat-form-field-appearance-fill div.mat-form-field-flex {
+  background-color: transparent;
+  padding: 0.25em 0 0 0;
+}
+
+.mat-form-field-appearance-fill div.mat-form-field-infix {
+  padding: 0;
 }

@@ -6,11 +6,12 @@ export interface IProject {
   name: string,
   description: string,
   priority: string,
-  assignedMembers: IMember[],
+  assignedMembers: Map<string,IMember[]>,
   startDate: Date,
   plannedEndDate: Date,
   endDate: Date,
   resourceBudget: number,
+  resourceUsed: number,
   status: string
 
 }
@@ -24,11 +25,12 @@ export class Project implements IProject {
     public name: string,
     public description: string,
     public priority: string,
-    public assignedMembers: IMember[],
+    public assignedMembers: Map<string,IMember[]>,
     public startDate: Date,
     public plannedEndDate: Date,
     public endDate: Date,
     public resourceBudget: number,
+    public resourceUsed: number,
     public status: string
   ) { }
 

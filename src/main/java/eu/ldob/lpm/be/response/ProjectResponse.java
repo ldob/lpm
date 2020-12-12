@@ -2,6 +2,7 @@ package eu.ldob.lpm.be.response;
 
 import eu.ldob.lpm.be.model.type.EPriority;
 import eu.ldob.lpm.be.model.type.EProjectRole;
+import eu.ldob.lpm.be.model.type.EProjectStatus;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class ProjectResponse {
     private Date plannedEndDate;
     private Date endDate;
     private Float resourceBudget;
+    private EProjectStatus status;
     private Map<EProjectRole, List<MemberResponse>> assignedMembers = new HashMap<>();
     private List<TodoResponse> todos = new ArrayList<>();
 
@@ -106,5 +108,13 @@ public class ProjectResponse {
 
     public void addTodo(TodoResponse todo) {
         todos.add(todo);
+    }
+
+    public EProjectStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EProjectStatus status) {
+        this.status = status;
     }
 }

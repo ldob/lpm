@@ -29,20 +29,24 @@ import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {MatListModule} from "@angular/material/list";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
+import {ProjectComponent} from './project/project.component';
 import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectStatusComponent } from './project-status/project-status.component';
+import { LoadingOverlayComponent } from './loading-overlay/loading-overlay.component';
+import { ErrorComponent } from './error/error.component';
 import {LogService} from "./service/log.service";
 
 
-import localeDe from '@angular/common/locales/de';
 import {registerLocaleData} from "@angular/common";
-import {ProjectComponent} from './project/project.component';
-import { ProjectStatusComponent } from './project-status/project-status.component';
-import { ErrorComponent } from './error/error.component';
+
+import localeDe from '@angular/common/locales/de';
 registerLocaleData(localeDe);
 
 
@@ -57,7 +61,8 @@ registerLocaleData(localeDe);
     ProjectListComponent,
     ProjectComponent,
     ProjectStatusComponent,
-    ErrorComponent
+    ErrorComponent,
+    LoadingOverlayComponent
   ],
   imports: [
     BrowserModule,
@@ -80,11 +85,13 @@ registerLocaleData(localeDe);
     MatIconModule,
     MatButtonModule,
     MatTableModule,
+    MatCheckboxModule,
     MatDividerModule,
     MatSlideToggleModule,
     MatSelectModule,
     MatOptionModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatPaginatorModule,
     MatSortModule,
     MatListModule,

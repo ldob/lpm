@@ -51,7 +51,7 @@ public class ProjectStatusService {
         ProjectModel allowedProject = getAllowedProject(projectId, user);
         if(allowedProject != null) {
             List<ProjectStatusResponse> statusList = new ArrayList<>();
-            for(ProjectStatusModel status : allowedProject.getStatus()) {
+            for(ProjectStatusModel status : projectStatusRepository.findAllByProjectOrderByDateDesc(allowedProject)) {
                 statusList.add(converter.modelToResponse(status));
             }
             return statusList;

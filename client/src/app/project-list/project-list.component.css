@@ -32,3 +32,8 @@ tr.table-expandable-row:not(.example-expanded-row):active {
   overflow: hidden;
   display: flex;
 }
+
+span.priority {
+  white-space: pre;
+  outline: 1px solid;
+}

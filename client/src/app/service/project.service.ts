@@ -24,4 +24,8 @@ export class ProjectService {
   editProject(project: IProject) {
     return this.http.post('/api/project/update', project);
   }
+
+  getPriorities() {
+    return this.http.get('/api/values/priorities');
+  }
 }
