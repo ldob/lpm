@@ -60,6 +60,21 @@ public class ProjectStatusService {
         throw new LpmNoResultException("Project " + projectId + " not found");
     }
 
+    public ProjectStatusResponse findLatest(Long projectId, UserModel user) {
+
+        ProjectModel allowedProject = getAllowedProject(projectId, user);
+        if(allowedProject != null) {
+            Optional<ProjectStatusModel> model = projectStatusRepository.findTopByProjectOrderByDateDesc(allowedProject);
+            if(model.isPresent()) {
+                return converter.modelToResponse(model.get());
+            }
+
+            return null;
+        }
+
+        throw new LpmNoResultException("Project " + projectId + " not found");
+    }
+
     private ProjectModel getAllowedProject(Long projectId, UserModel user) {
         Optional<ProjectModel> globalProjectModel = projectRepository.findById(projectId);
         ProjectModel allowedProject = null;

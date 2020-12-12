@@ -18,7 +18,7 @@
   <ng-container matColumnDef="action_pre">
     <th mat-header-cell *matHeaderCellDef style="width: 36px"></th>
     <td mat-cell *matCellDef="let element">
-      <mat-icon (click)="expandedElement = expandedElement === element ? null : element" class="icon-button">{{expandedElement === element ? 'expand_less' : 'expand_more'}}</mat-icon>
+      <mat-icon (click)="setSelectedProject(element)" class="icon-button">{{selectedProject === element ? 'expand_less' : 'expand_more'}}</mat-icon>
     </td>
   </ng-container>
 
@@ -62,19 +62,31 @@
 
   <ng-container matColumnDef="expandedDetail">
     <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-      <div class="table-expandable-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+      <div class="table-expandable-detail" [@detailExpand]="element === selectedProject ? 'expanded' : 'collapsed'">
         <div class="table-expandable-name">
           {{element.name}}
         </div>
         <div class="table-expandable-description">
           {{element.description}}
         </div>
+        <div *ngIf="selectedProjectLatestStatus">
+          <h3>aktueller Status<small> - {{selectedProjectLatestStatus.date | date}}</small></h3>
+          <div class="table-expandable-description">
+            {{selectedProjectLatestStatus.tweet}}
+          </div>
+          <div class="table-expandable-description">
+            {{selectedProjectLatestStatus.nextSteps}}
+          </div>
+          <div class="table-expandable-description">
+            {{selectedProjectLatestStatus.problems}}
+          </div>
+        </div>
       </div>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="table-expandable-row"  [class.example-expanded-row]="expandedElement === element"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="table-expandable-row"  [class.example-expanded-row]="selectedProject === element"></tr>
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="table-expandable-detail-row"></tr>
 
 </table>

@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {HttpClientModule} from "@angular/common/http";
 
-import { authInterceptorProviders } from './helper/auth.interceptor';
+import { authInterceptorProviders } from './helper/lpm-http-interceptor.service';
 
 import {AppRoutingModule} from "./app-routing.module";
 

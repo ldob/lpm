@@ -13,6 +13,10 @@ export class ProjectStatusService {
     return this.http.get('/api/project/' + id + '/status/all');
   }
 
+  getLatestProjectStatus(id: number) {
+    return this.http.get('/api/project/' + id + '/status/latest');
+  }
+
   addProjectStatus(projectId: number, project: IProjectStatus) {
     return this.http.post('/api/project/' + projectId + '/status/add', project);
   }

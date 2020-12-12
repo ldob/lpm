@@ -6,6 +6,8 @@ import {IProject} from "../entity/project";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
+import {IProjectStatus} from "../entity/project-status";
+import {ProjectStatusService} from "../service/project-status.service";
 
 @Component({
   selector: 'app-project-list',
@@ -24,18 +26,21 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   projectList$: MatTableDataSource<IProject>;
 
   columnsToDisplay = ['action_pre', 'priority', 'project', 'startDate', 'endDate', 'status', 'action_post'];
-  expandedElement: null;
+  selectedProject: IProject | null;
+  selectedProjectLatestStatus: IProjectStatus | null;
 
   @ViewChild(MatSort) sort: MatSort | null = null;
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
-  constructor(private projectService: ProjectService, private log: LogService) {
+  constructor(private projectService: ProjectService, private projectStatusService: ProjectStatusService, private log: LogService) {
     // TODO refactor
     /*
     this.projectList$ = projectService.getProjects();
     this.projectList$.subscribe(data => this.log.info("getProjects", data));
     */
     this.projectList$ = new MatTableDataSource<IProject>();
+    this.selectedProject = null;
+    this.selectedProjectLatestStatus = null;
   }
 
   ngOnInit(): void {
@@ -64,5 +69,18 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   public doFilter = (target: EventTarget | null) => {
     let element = target as HTMLInputElement;
     this.projectList$.filter = element.value.trim().toLocaleLowerCase();
+  }
+
+  setSelectedProject(project: IProject): void {
+    this.selectedProject = this.selectedProject === project ? null : project;
+
+    if(this.selectedProject != null) {
+      this.projectStatusService.getLatestProjectStatus(this.selectedProject.id).subscribe(
+        data => {
+          this.selectedProjectLatestStatus = data as IProjectStatus;
+          this.log.debug("getProjectStatus", this.selectedProjectLatestStatus);
+        }
+      );
+    }
   }
 }

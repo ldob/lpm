@@ -60,6 +60,20 @@ export class ProjectStatusComponent implements OnInit {
     }
     else {
       this.selectedProjectStatus = new ProjectStatus();
+      this.projectStatusService.getLatestProjectStatus(this.project.id).subscribe(
+        data => {
+          if(this.selectedProjectStatus != null && data != null) {
+            let ps = data as IProjectStatus;
+            this.selectedProjectStatus.status = ps.status;
+            this.selectedProjectStatus.tweet = ps.tweet;
+            this.selectedProjectStatus.nextSteps = ps.nextSteps;
+            this.selectedProjectStatus.problems = ps.problems;
+          }
+          else {
+            this.selectedProjectStatus = null;
+          }
+        }
+      );
       this.selectedProjectStatus.date = new Date();
 
       const list = this.projectStatusList$.data;

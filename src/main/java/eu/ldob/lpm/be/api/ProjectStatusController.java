@@ -35,6 +35,22 @@ public class ProjectStatusController extends AController{
         }
     }
 
+    @GetMapping(
+            path = "/latest",
+            produces = MediaType.APPLICATION_JSON
+    )
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getLatest(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl user) {
+        try {
+            return ResponseEntity.ok(service.findLatest(projectId, getUserModel(user)));
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
     @PostMapping(
             path = "/add",
             consumes = MediaType.APPLICATION_JSON

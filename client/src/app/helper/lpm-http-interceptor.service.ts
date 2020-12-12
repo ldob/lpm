@@ -4,17 +4,19 @@ import { HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http'
 
 import { TokenStorageService } from '../service/token-storage.service';
 import { Observable } from 'rxjs';
-import {catchError} from "rxjs/operators";
+import {catchError, finalize} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {LogService} from "../service/log.service";
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(private token: TokenStorageService, private log: LogService, private router: Router) { }
+export class LpmHttpInterceptor implements HttpInterceptor {
+  constructor(private token: TokenStorageService, private loadingScreen: LoadingScreenService, private log: LogService, private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    loadingScreen.show();
+
     let authRequest = request;
     const token = this.token.getToken();
     if (token != null) {
@@ -35,10 +37,13 @@ export class AuthInterceptor implements HttpInterceptor {
           observer.error(error);
           observer.complete();
         }
-      })));
+      })))
+      .pipe(finalize(() => {
+        loadingScreen.hide();
+      });
   }
 }
 
 export const authInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  { provide: HTTP_INTERCEPTORS, useClass: LpmHttpInterceptor, multi: true }
 ];
