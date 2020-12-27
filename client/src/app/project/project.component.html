@@ -1,104 +1,137 @@
-<mat-card>
-  <mat-card-content>
-    <form *ngIf="project"
-          name="form"
-          (ngSubmit)="f.form.valid && save()"
-          #f="ngForm"
-          novalidate>
-      <h2>Projekt</h2>
-      <mat-form-field class="full-width-input">
-        <input matInput
-               placeholder="Bezeichnung"
-               type="text"
-               class="form-control"
-               autocomplete="off"
-               name="name"
-               [(ngModel)]="project.name"
-               required>
-      </mat-form-field>
-      <mat-form-field class="full-width-input">
-      <mat-label>Beschreibung</mat-label>
-        <textarea matInput
-                  cdkTextareaAutosize
-                  #autosize="cdkTextareaAutosize"
-                  cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="8"
-                  autocomplete="off"
-                  name="description"
-                  [(ngModel)]="project.description"></textarea>
-      </mat-form-field>
-      <mat-form-field class="full-width-input">
-        <mat-select placeholder="Priorität"
+<div fxLayout="row" fxFlexAlign="center center">
+  <mat-card>
+    <mat-card-content>
+      <form *ngIf="project"
+            name="form"
+            (ngSubmit)="f.form.valid && save()"
+            #f="ngForm"
+            novalidate>
+        <h2>Projekt</h2>
+        <mat-form-field class="full-width-input">
+          <input matInput
+                 placeholder="Bezeichnung"
+                 type="text"
+                 class="form-control"
+                 autocomplete="off"
+                 name="name"
+                 [(ngModel)]="project.name"
+                 required>
+        </mat-form-field>
+        <mat-form-field class="full-width-input">
+        <mat-label>Beschreibung</mat-label>
+          <textarea matInput
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="8"
                     autocomplete="off"
-                    #priority
-                    value="{{project.priority}}"
-                    name="priority"
-                    [(ngModel)]="project.priority"
-                    required>
-          <mat-option *ngFor="let priority of priorityList" [value]="priority">{{priority}}</mat-option>
-        </mat-select>
+                    name="description"
+                    [(ngModel)]="project.description"></textarea>
+        </mat-form-field>
+        <mat-form-field class="full-width-input">
+          <mat-select placeholder="Priorität"
+                      autocomplete="off"
+                      #priority
+                      value="{{project.priority}}"
+                      name="priority"
+                      [(ngModel)]="project.priority"
+                      required>
+            <mat-option *ngFor="let priority of priorityList" [value]="priority">{{priority}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="full-width-input">
+          <input matInput
+                 placeholder="geplante Ressourcen (MH)"
+                 type="number"
+                 class="form-control"
+                 autocomplete="off"
+                 name="resourceBudget"
+                 [(ngModel)]="project.resourceBudget"
+                 required>
+        </mat-form-field>
+        <mat-form-field class="full-width-input">
+          <input matInput
+                 placeholder="aufgewendete Ressourcen (MH)"
+                 type="number"
+                 class="form-control"
+                 autocomplete="off"
+                 name="resourceUsed"
+                 [(ngModel)]="project.resourceUsed"
+                 disabled>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Beginn</mat-label>
+          <input matInput
+                 [matDatepicker]="startDate"
+                 autocomplete="off"
+                 name="startDate"
+                 [(ngModel)]="project.startDate">
+          <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+          <mat-datepicker #startDate></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>geplantes Ende</mat-label>
+          <input matInput
+                 [matDatepicker]="plannedEndDate"
+                 autocomplete="off"
+                 name="startDate"
+                 [(ngModel)]="project.plannedEndDate">
+          <mat-datepicker-toggle matSuffix [for]="plannedEndDate"></mat-datepicker-toggle>
+          <mat-datepicker #plannedEndDate></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="full-width-input">
+          <input matInput
+                 placeholder="Status"
+                 type="text"
+                 class="form-control"
+                 autocomplete="off"
+                 name="status"
+                 [(ngModel)]="project.status"
+                 disabled>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Abschluss</mat-label>
+          <input matInput
+                 [matDatepicker]="endDate"
+                 autocomplete="off"
+                 name="startDate"
+                 [(ngModel)]="project.endDate">
+          <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+          <mat-datepicker #endDate></mat-datepicker>
+        </mat-form-field>
+        <button mat-raised-button color="primary">Speichern</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field *ngIf="project" class="member-manage-chip-list">
+        <mat-label>PM</mat-label>
+        <mat-chip-list #chipListManage aria-label="PM">
+          <mat-chip
+            *ngFor="let member of members"
+            [selectable]="true"
+            [removable]="true"
+            (removed)="removeMember(member, 'MANAGE')">
+            {{member.username}}
+            <mat-icon matChipRemove>remove</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Projektmanager..."
+            #memberManageInput
+            [formControl]="memberManageCtrl"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipListManage"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="addMember($event, 'MANAGE')">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedMember($event, 'MANAGE')">
+          <mat-option *ngFor="let member of filteredMembers | async" [value]="member">
+            {{member.username}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
-      <mat-form-field class="full-width-input">
-        <input matInput
-               placeholder="geplante Ressourcen (MH)"
-               type="number"
-               class="form-control"
-               autocomplete="off"
-               name="resourceBudget"
-               [(ngModel)]="project.resourceBudget"
-               required>
-      </mat-form-field>
-      <mat-form-field class="full-width-input">
-        <input matInput
-               placeholder="aufgewendete Ressourcen (MH)"
-               type="number"
-               class="form-control"
-               autocomplete="off"
-               name="resourceUsed"
-               [(ngModel)]="project.resourceUsed"
-               disabled>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Beginn</mat-label>
-        <input matInput
-               [matDatepicker]="startDate"
-               autocomplete="off"
-               name="startDate"
-               [(ngModel)]="project.startDate">
-        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
-        <mat-datepicker #startDate></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>geplantes Ende</mat-label>
-        <input matInput
-               [matDatepicker]="plannedEndDate"
-               autocomplete="off"
-               name="startDate"
-               [(ngModel)]="project.plannedEndDate">
-        <mat-datepicker-toggle matSuffix [for]="plannedEndDate"></mat-datepicker-toggle>
-        <mat-datepicker #plannedEndDate></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field class="full-width-input">
-        <input matInput
-               placeholder="Status"
-               type="text"
-               class="form-control"
-               autocomplete="off"
-               name="status"
-               [(ngModel)]="project.status"
-               disabled>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Abschluss</mat-label>
-        <input matInput
-               [matDatepicker]="endDate"
-               autocomplete="off"
-               name="startDate"
-               [(ngModel)]="project.endDate">
-        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-        <mat-datepicker #endDate></mat-datepicker>
-      </mat-form-field>
-      <button mat-raised-button color="primary">Speichern</button>
-    </form>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

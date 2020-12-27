@@ -9,6 +9,7 @@ import {ProjectListComponent} from './project-list/project-list.component';
 import {ProjectComponent} from "./project/project.component";
 import {ProjectStatusComponent} from "./project-status/project-status.component";
 import {ErrorComponent} from "./error/error.component";
+import {UserComponent} from "./user/user.component";
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -18,6 +19,8 @@ const routes: Routes = [
   { path: 'projects', component: ProjectListComponent },
   { path: 'project', component: ProjectComponent },
   { path: 'project/:id', component: ProjectComponent },
+  { path: 'user', component: UserComponent },
+  { path: 'user/:id', component: UserComponent },
   { path: 'project/:id/status', component: ProjectStatusComponent },
   { path: 'error/:code', component: ErrorComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },

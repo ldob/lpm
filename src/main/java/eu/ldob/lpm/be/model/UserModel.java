@@ -1,5 +1,7 @@
 package eu.ldob.lpm.be.model;
 
+import eu.ldob.lpm.be.model.type.ERole;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -94,5 +96,20 @@ public class UserModel extends AModel<Long> {
 
     public void setRoles(Set<RoleModel> roles) {
         this.roles = roles;
+    }
+
+    public void addRole(ERole role) {
+        RoleModel r = new RoleModel();
+        r.setName(role);
+
+        roles.add(r);
+    }
+
+    public void removeRole(ERole role) {
+        for(RoleModel r : roles) {
+            if(r.getName() == role) {
+                roles.remove(r);
+            }
+        }
     }
 }

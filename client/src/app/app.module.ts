@@ -47,6 +47,9 @@ import {LogService} from "./service/log.service";
 import {registerLocaleData} from "@angular/common";
 
 import localeDe from '@angular/common/locales/de';
+import { UserComponent } from './user/user.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatChipsModule} from "@angular/material/chips";
 registerLocaleData(localeDe);
 
 
@@ -62,7 +65,8 @@ registerLocaleData(localeDe);
     ProjectComponent,
     ProjectStatusComponent,
     ErrorComponent,
-    LoadingOverlayComponent
+    LoadingOverlayComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -97,7 +101,9 @@ registerLocaleData(localeDe);
     MatListModule,
     MatGridListModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatAutocompleteModule,
+    MatChipsModule
   ],
   providers: [
     authInterceptorProviders,

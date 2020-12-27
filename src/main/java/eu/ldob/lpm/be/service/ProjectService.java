@@ -95,12 +95,12 @@ public class ProjectService {
     public void addMember(Long projectId, Long memberId, EProjectRole role) {
         Optional<ProjectModel> project = projectRepository.findById(projectId);
         if(project.isEmpty()) {
-            throw new LpmNoResultException("Project not found");
+            throw new LpmNoResultException("Project " + projectId + " not found");
         }
 
         Optional<UserModel> user = userRepository.findById(memberId);
         if(user.isEmpty()) {
-            throw new LpmNoResultException("Member not found");
+            throw new LpmNoResultException("Member " + memberId + " not found");
         }
 
         project.get().addAssignedUser(new AssignedProjectModel(project.get(), user.get(), role));
@@ -109,12 +109,12 @@ public class ProjectService {
     public void removeMember(Long projectId, Long memberId, EProjectRole role) {
         Optional<ProjectModel> project = projectRepository.findById(projectId);
         if(project.isEmpty()) {
-            throw new LpmNoResultException("Project not found");
+            throw new LpmNoResultException("Project " + projectId + " not found");
         }
 
         Optional<UserModel> user = userRepository.findById(memberId);
         if(user.isEmpty()) {
-            throw new LpmNoResultException("Member not found");
+            throw new LpmNoResultException("Member " + memberId + " not found");
         }
 
         project.get().removeAssignedUser(new AssignedProjectModel(project.get(), user.get(), role));

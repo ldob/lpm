@@ -1,0 +1,26 @@
+table {
+  min-width: 100px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 2em;
+}
+
+th.mat-header-cell {
+  text-align: left;
+  min-width: 24px;
+  max-width: 250px;
+}
+
+mat-card {
+  min-width: 600px;
+  margin: 2em auto;
+  text-align: center;
+}
+
+mat-form-field {
+  display: block;
+}
+
+table {
+  margin: 2em auto !important;
+}

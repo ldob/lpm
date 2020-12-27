@@ -2,8 +2,9 @@
     <span>
       <button mat-button routerLink="home">{{ title }}</button>
       <button mat-button routerLink="home"><mat-icon>home</mat-icon></button>
-      <button mat-button routerLink="projects" *ngIf="isLoggedIn"><mat-icon>assignment</mat-icon></button>
+      <button mat-button routerLink="projects" *ngIf="isLoggedIn && isUser"><mat-icon>assignment</mat-icon></button>
       <button mat-button routerLink="profile" *ngIf="isLoggedIn"><mat-icon>how_to_reg</mat-icon></button>
+      <button mat-button routerLink="user" *ngIf="isLoggedIn && isAdmin"><mat-icon>person_outline</mat-icon></button>
     </span>
   <div fxLayout="row">
     <button mat-button href="/login" routerLink="login" *ngIf="!isLoggedIn">

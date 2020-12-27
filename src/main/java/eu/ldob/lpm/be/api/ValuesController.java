@@ -50,4 +50,20 @@ public class ValuesController extends AController{
         }
     }
 
+    @GetMapping(
+            path = "/roles",
+            produces = MediaType.APPLICATION_JSON
+    )
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getAllRoles() {
+        try {
+            return ResponseEntity.ok(service.findAllRoles());
+        }
+        catch (LpmNoResultException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
 }
