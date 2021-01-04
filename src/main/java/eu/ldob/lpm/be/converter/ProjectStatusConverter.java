@@ -3,17 +3,10 @@ package eu.ldob.lpm.be.converter;
 import eu.ldob.lpm.be.model.ProjectStatusModel;
 import eu.ldob.lpm.be.request.ProjectStatusRequest;
 import eu.ldob.lpm.be.response.ProjectStatusResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProjectStatusConverter implements ModelConverter<ProjectStatusRequest, ProjectStatusModel, ProjectStatusResponse> {
-
-    @Autowired
-    MemberConverter memberConverter;
-
-    @Autowired
-    TodoConverter todoConverter;
 
     @Override
     public ProjectStatusModel requestToModel(ProjectStatusRequest request) {

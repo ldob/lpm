@@ -38,6 +38,10 @@ public class ProjectTodoModel extends AModel<Long> {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public ProjectModel getProject() {
         return project;
     }

@@ -2,7 +2,6 @@ package eu.ldob.lpm.be.converter;
 
 import eu.ldob.lpm.be.model.AssignedProjectModel;
 import eu.ldob.lpm.be.model.ProjectModel;
-import eu.ldob.lpm.be.model.ProjectTodoModel;
 import eu.ldob.lpm.be.request.ProjectRequest;
 import eu.ldob.lpm.be.response.ProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,6 @@ public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectM
 
     @Autowired
     MemberConverter memberConverter;
-
-    @Autowired
-    TodoConverter todoConverter;
 
     @Override
     public ProjectModel requestToModel(ProjectRequest request) {
@@ -49,10 +45,6 @@ public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectM
 
         for(AssignedProjectModel assignedUser : model.getAssignedUsers()) {
             response.addAssignedMember(assignedUser.getRole(), memberConverter.modelToResponse(assignedUser.getUser()));
-        }
-
-        for(ProjectTodoModel todo : model.getTodos()) {
-            response.addTodo(todoConverter.modelToResponse(todo));
         }
 
         return response;

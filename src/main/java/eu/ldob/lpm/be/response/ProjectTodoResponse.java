@@ -4,15 +4,17 @@ import eu.ldob.lpm.be.model.type.ETodoStatus;
 
 import java.util.Date;
 
-public class TodoResponse {
+public class ProjectTodoResponse {
 
     private Long id;
+    private Long projectId;
+    private String projectName;
     private MemberResponse assignedMember;
     private Date dueDate;
     private ETodoStatus status;
     private String description;
 
-    public TodoResponse() {
+    public ProjectTodoResponse() {
     }
 
     public Long getId() {
@@ -21,6 +23,22 @@ public class TodoResponse {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public MemberResponse getAssignedMember() {

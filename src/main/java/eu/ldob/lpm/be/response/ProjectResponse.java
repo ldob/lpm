@@ -18,7 +18,7 @@ public class ProjectResponse {
     private Float resourceBudget;
     private EProjectStatus status;
     private Map<EProjectRole, List<MemberResponse>> assignedMembers = new HashMap<>();
-    private List<TodoResponse> todos = new ArrayList<>();
+    private List<ProjectTodoResponse> todos = new ArrayList<>();
 
     public ProjectResponse() {
     }
@@ -102,11 +102,11 @@ public class ProjectResponse {
         }
     }
 
-    public List<TodoResponse> getTodos() {
+    public List<ProjectTodoResponse> getTodos() {
         return todos;
     }
 
-    public void addTodo(TodoResponse todo) {
+    public void addTodo(ProjectTodoResponse todo) {
         todos.add(todo);
     }
 
