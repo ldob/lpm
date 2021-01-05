@@ -63,7 +63,7 @@
           </mat-form-field>
           <mat-form-field class="full-width-input">
             <input matInput
-                   placeholder="Problems"
+                   placeholder="Probleme"
                    type="text"
                    class="form-control"
                    autocomplete="off"
@@ -79,7 +79,65 @@
   <div fxLayout="column" fxLayoutAlign="center start">
     <mat-card class="mat-elevation-z4">
       <mat-card-content>
-        <h1>TODOs</h1>
+        <div fxLayout="row">
+          <div fxFlex><h1>TODOs</h1></div>
+          <div><mat-icon (click)="addTodo()" class="icon-button">add</mat-icon></div>
+        </div>
+
+        <div fxLayout="row" *ngIf="todoList.length === 0">
+          <span>keine offenen TODOs vorhanden</span>
+        </div>
+        <div fxLayout="column" *ngFor="let todo of todoList; let i = index">
+          <div *ngIf="!todo.edit" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="40">{{todo.description}}</div>
+            <div fxFlex="25">{{todo.status}}</div>
+            <div fxFlex="25">{{todo.assignedMember.name}}</div>
+            <mat-icon (click)="todo.edit = true" class="icon-button">create</mat-icon>
+          </div>
+
+          <div *ngIf="todo.edit" fxLayout="row" fxLayoutAlign="space-around center">
+            <div fxFlex="40">
+              <mat-form-field class="full-width-input">
+                <input matInput
+                       placeholder="Beschreibung"
+                       type="text"
+                       class="form-control"
+                       autocomplete="off"
+                       name="description"
+                       [(ngModel)]="todo.description"
+                       required>
+              </mat-form-field>
+            </div>
+            <div fxFlex="25">
+              <mat-form-field class="full-width-input">
+                <mat-select placeholder="Status"
+                            autocomplete="off"
+                            #priority
+                            value="{{todo.status}}"
+                            name="status"
+                            [(ngModel)]="todo.status"
+                            required>
+                  <mat-option *ngFor="let status of todoStatusList" [value]="status">{{status}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="20">
+              <mat-form-field class="full-width-input">
+                <mat-select placeholder="Verantwortlicher"
+                            autocomplete="off"
+                            #priority
+                            value="{{todo.assignedMember}}"
+                            name="status"
+                            [(ngModel)]="todo.assignedMember"
+                            required>
+                  <mat-option *ngFor="let member of project.assignedMembers['COLLABORATE']" [value]="member">{{member.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <mat-icon (click)="saveTodo(todo)" class="icon-button">check</mat-icon>
+            <mat-icon (click)="todo.edit = false" class="icon-button">clear</mat-icon>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

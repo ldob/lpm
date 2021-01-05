@@ -51,6 +51,22 @@ public class ValuesController extends AController{
     }
 
     @GetMapping(
+            path = "/todoStatus",
+            produces = MediaType.APPLICATION_JSON
+    )
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getAllTodoStatus() {
+        try {
+            return ResponseEntity.ok(service.findAllTodoStatus());
+        }
+        catch (LpmNoResultException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @GetMapping(
             path = "/roles",
             produces = MediaType.APPLICATION_JSON
     )

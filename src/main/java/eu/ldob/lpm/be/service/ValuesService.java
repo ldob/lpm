@@ -3,6 +3,7 @@ package eu.ldob.lpm.be.service;
 import eu.ldob.lpm.be.model.type.EPriority;
 import eu.ldob.lpm.be.model.type.EProjectStatus;
 import eu.ldob.lpm.be.model.type.ERole;
+import eu.ldob.lpm.be.model.type.ETodoStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -17,6 +18,10 @@ public class ValuesService {
 
     public List<EProjectStatus> findAllStatus() {
         return Arrays.asList(EProjectStatus.values());
+    }
+
+    public List<ETodoStatus> findAllTodoStatus() {
+        return Arrays.asList(ETodoStatus.values());
     }
 
     public List<ERole> findAllRoles() {

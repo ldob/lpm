@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UserConverter implements ModelConverter<UserRequest, UserModel, UserResponse> {
+public class UserConverter extends ModelConverter<UserRequest, UserModel, UserResponse> {
 
     @Override
     public UserModel requestToModel(UserRequest request) {

@@ -6,7 +6,7 @@ import eu.ldob.lpm.be.response.ProjectStatusResponse;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectStatusConverter implements ModelConverter<ProjectStatusRequest, ProjectStatusModel, ProjectStatusResponse> {
+public class ProjectStatusConverter extends ModelConverter<ProjectStatusRequest, ProjectStatusModel, ProjectStatusResponse> {
 
     @Override
     public ProjectStatusModel requestToModel(ProjectStatusRequest request) {

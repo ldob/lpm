@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectConverter implements ModelConverter<ProjectRequest, ProjectModel, ProjectResponse> {
+public class ProjectConverter extends ModelConverter<ProjectRequest, ProjectModel, ProjectResponse> {
 
     @Autowired
     MemberConverter memberConverter;

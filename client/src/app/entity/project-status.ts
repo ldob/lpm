@@ -1,4 +1,3 @@
-import {IMember} from "./member";
 
 export interface IProjectStatus {
 

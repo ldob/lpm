@@ -3,15 +3,19 @@ package eu.ldob.lpm.be.converter;
 import eu.ldob.lpm.be.model.UserModel;
 import eu.ldob.lpm.be.request.MemberRequest;
 import eu.ldob.lpm.be.response.MemberResponse;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MemberConverter implements ModelConverter<MemberRequest, UserModel, MemberResponse> {
+public class MemberConverter extends ModelConverter<MemberRequest, UserModel, MemberResponse> {
 
     @Override
     public UserModel requestToModel(MemberRequest request) {
-        throw new NotYetImplementedException();
+        UserModel model = new UserModel();
+
+        model.setId(request.getId());
+        model.setUsername(request.getName());
+
+        return model;
     }
 
     @Override

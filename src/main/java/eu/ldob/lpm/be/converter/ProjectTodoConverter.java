@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectTodoConverter implements ModelConverter<ProjectTodoRequest, ProjectTodoModel, ProjectTodoResponse> {
+public class ProjectTodoConverter extends ModelConverter<ProjectTodoRequest, ProjectTodoModel, ProjectTodoResponse> {
 
     @Autowired
     MemberConverter memberConverter;

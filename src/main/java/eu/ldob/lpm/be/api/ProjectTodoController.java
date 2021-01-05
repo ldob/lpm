@@ -69,6 +69,22 @@ public class ProjectTodoController extends AController{
     }
 
     @GetMapping(
+            path = "/all/{projectId}",
+            produces = MediaType.APPLICATION_JSON
+    )
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getAllByProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl user) {
+        try {
+            return ResponseEntity.ok(service.findByProject(projectId, getUserModel(user)));
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @GetMapping(
             path = "/own",
             produces = MediaType.APPLICATION_JSON
     )

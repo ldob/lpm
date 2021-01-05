@@ -6,7 +6,6 @@ import eu.ldob.lpm.be.model.AssignedProjectModel;
 import eu.ldob.lpm.be.model.ProjectModel;
 import eu.ldob.lpm.be.model.UserModel;
 import eu.ldob.lpm.be.model.type.EProjectRole;
-import eu.ldob.lpm.be.model.type.ERole;
 import eu.ldob.lpm.be.repository.AssignedProjectRepository;
 import eu.ldob.lpm.be.repository.ProjectRepository;
 import eu.ldob.lpm.be.repository.UserRepository;
@@ -32,6 +31,8 @@ public class ProjectService {
     AssignedProjectRepository assignedProjectRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ServiceUtil util;
 
     public ProjectResponse save(ProjectRequest request, UserModel user) {
         ProjectModel model = converter.requestToModel(request);
@@ -66,24 +67,16 @@ public class ProjectService {
 
     public ProjectResponse findById(Long id, UserModel user) throws LpmNoResultException {
 
-        Optional<ProjectModel> globalProjectModel = projectRepository.findById(id);
-        if(globalProjectModel.isPresent()) {
+        ProjectModel model = util.getAllowedProject(id, user);
 
-            if(user.getRoles().contains(ERole.ROLE_ADMIN)) {
-                return converter.modelToResponse(globalProjectModel.get());
-            }
-
-            Optional<AssignedProjectModel> assignedProjectModel = assignedProjectRepository.findByUserAndProject(user, globalProjectModel.get());
-            if(assignedProjectModel.isPresent()) {
-                return converter.modelToResponse(assignedProjectModel.get().getProject());
-            }
+        if(model != null) {
+            return converter.modelToResponse(model);
         }
 
         throw new LpmNoResultException("Project " + id + " not found");
     }
 
     public ProjectResponse findByIdInternal(Long id) throws LpmNoResultException {
-
         Optional<ProjectModel> model = projectRepository.findById(id);
         if(model.isPresent()) {
             return converter.modelToResponse(model.get());
