@@ -70,7 +70,10 @@
                    name="problems"
                    [(ngModel)]="selectedProjectStatus.problems">
           </mat-form-field>
-          <button mat-raised-button color="primary">Speichern</button>
+          <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="3em">
+            <button mat-button color="primary">Speichern</button>
+            <button mat-raised-button color="primary">Speichern und Schließen</button>
+          </div>
         </form>
       </mat-card-content>
     </mat-card>
@@ -118,19 +121,6 @@
                             [(ngModel)]="todo.status"
                             required>
                   <mat-option *ngFor="let status of todoStatusList" [value]="status">{{status}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div fxFlex="20">
-              <mat-form-field class="full-width-input">
-                <mat-select placeholder="Verantwortlicher"
-                            autocomplete="off"
-                            #priority
-                            value="{{todo.assignedMember}}"
-                            name="status"
-                            [(ngModel)]="todo.assignedMember"
-                            required>
-                  <mat-option *ngFor="let member of project.assignedMembers['COLLABORATE']" [value]="member">{{member.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>

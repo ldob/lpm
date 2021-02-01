@@ -23,7 +23,7 @@ public class MemberConverter extends ModelConverter<MemberRequest, UserModel, Me
         MemberResponse response = new MemberResponse();
 
         response.setId(model.getId());
-        response.setName(model.getUsername());
+        response.setUsername(model.getUsername());
 
         return response;
     }

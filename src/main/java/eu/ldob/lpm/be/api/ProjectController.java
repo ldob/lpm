@@ -13,6 +13,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/project")
@@ -90,39 +93,132 @@ public class ProjectController extends AController{
         }
     }
 
-    @PostMapping(
-            path = "/{projectId}/addMember/{memberId}",
+    @GetMapping(
+            path = "/{projectId}/member",
             produces = MediaType.APPLICATION_JSON
     )
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addMember(@PathVariable Long projectId, @PathVariable Long memberId, @RequestBody EProjectRole role) {
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getAllAssignedMembers(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl user) {
         try {
-            service.addMember(projectId, memberId, role);
-
-            return ResponseEntity.ok(service.findByIdInternal(projectId));
+            return ResponseEntity.ok(service.findAllAssignedMembers(projectId, Arrays.asList(EProjectRole.values()), getUserModel(user)));
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
         catch (LpmNoResultException e) {
             return ResponseEntity
                     .badRequest()
-                    .body(role + " of user " + memberId + " could not be added to project " + projectId);
+                    .body(e.getMessage());
         }
     }
 
-    @DeleteMapping(
-            path = "/{projectId}/deleteMember/{memberId}",
+    @GetMapping(
+            path = "/{projectId}/member/{memberRole}",
             produces = MediaType.APPLICATION_JSON
     )
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> removeMember(@PathVariable Long projectId, @PathVariable Long memberId, @RequestBody EProjectRole role) {
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getAssignedMembersByRole(@PathVariable Long projectId, @PathVariable String memberRole, @AuthenticationPrincipal UserDetailsImpl user) {
+        List<EProjectRole> roles = new ArrayList<>();
         try {
-            service.removeMember(projectId, memberId, role);
+            roles.add(EProjectRole.valueOf(memberRole));
 
-            return ResponseEntity.ok(service.findByIdInternal(projectId));
+            return ResponseEntity.ok(service.findAllAssignedMembers(projectId, roles, getUserModel(user)));
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
         catch (LpmNoResultException e) {
             return ResponseEntity
                     .badRequest()
-                    .body(role + " of user " + memberId + " could not be removed from project " + projectId);
+                    .body(e.getMessage());
+        }
+    }
+
+    @PostMapping(
+            path = "/{projectId}/addMember/{memberUsername}",
+            produces = MediaType.APPLICATION_JSON
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> addMember(@PathVariable Long projectId, @PathVariable String memberUsername, @RequestBody String role, @AuthenticationPrincipal UserDetailsImpl user) {
+        try {
+            service.addMember(projectId, memberUsername, EProjectRole.valueOf(role), getUserModel(user));
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("role " + role + " could not be found");
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+
+        try {
+            List<EProjectRole> roles = new ArrayList<>();
+            roles.add(EProjectRole.valueOf(role));
+            return ResponseEntity.ok(service.findAllAssignedMembers(projectId, roles, getUserModel(user)));
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("role " + role + " could not be found");
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+        catch (LpmNoResultException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @PostMapping(
+            path = "/{projectId}/removeMember/{memberUsername}",
+            produces = MediaType.APPLICATION_JSON
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> removeMember(@PathVariable Long projectId, @PathVariable String memberUsername, @RequestBody String role, @AuthenticationPrincipal UserDetailsImpl user) {
+        try {
+            service.removeMember(projectId, memberUsername, EProjectRole.valueOf(role), getUserModel(user));
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("role " + role + " could not be found");
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+
+        try {
+            List<EProjectRole> roles = new ArrayList<>();
+            roles.add(EProjectRole.valueOf(role));
+            return ResponseEntity.ok(service.findAllAssignedMembers(projectId, roles, getUserModel(user)));
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("role " + role + " could not be found");
+        }
+        catch (LpmNotAllowedException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+        catch (LpmNoResultException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
     }
 }

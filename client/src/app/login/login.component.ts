@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { TokenStorageService } from '../service/token-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
   username: string = "";
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) { }
+  constructor(private router: Router, private authService: AuthService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -24,6 +25,8 @@ export class LoginComponent implements OnInit {
 
       this.username = this.tokenStorage.getUser().username;
       this.roles = this.tokenStorage.getUser().roles;
+
+      this.router.navigate(['home']);
     }
   }
 

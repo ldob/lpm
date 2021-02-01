@@ -31,7 +31,10 @@
       <mat-error *ngIf="f.submitted && isLoginFailed">
         Benutzername oder Passwort nicht korrekt.
       </mat-error>
+      
+      <div fxLayout="row" fxLayoutAlign="end end">
       <button mat-raised-button color="primary">Login</button>
+      </div>
     </form>
     <h2 *ngIf="isLoggedIn">{{ username }} ist eigeloggt als {{ roles }}</h2>
   </mat-card-content>

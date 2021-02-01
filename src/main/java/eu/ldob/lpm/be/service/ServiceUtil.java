@@ -3,6 +3,7 @@ package eu.ldob.lpm.be.service;
 import eu.ldob.lpm.be.model.AssignedProjectModel;
 import eu.ldob.lpm.be.model.ProjectModel;
 import eu.ldob.lpm.be.model.UserModel;
+import eu.ldob.lpm.be.model.type.EProjectRole;
 import eu.ldob.lpm.be.model.type.ERole;
 import eu.ldob.lpm.be.repository.AssignedProjectRepository;
 import eu.ldob.lpm.be.repository.ProjectRepository;
@@ -28,7 +29,7 @@ public class ServiceUtil {
         ProjectModel allowedProject = null;
         if(globalProjectModel.isPresent()) {
 
-            if(user.getRoles().contains(ERole.ROLE_ADMIN)) {
+            if(user.isAdmin()) {
                 allowedProject = globalProjectModel.get();
             }
 
@@ -49,6 +50,18 @@ public class ServiceUtil {
         List<ProjectModel> projectList = new ArrayList<>();
         for (AssignedProjectModel model : assignedProjectRepository.findByUser(user)) {
             projectList.add(model.getProject());
+        }
+
+        return projectList;
+    }
+
+    protected List<ProjectModel> getAllowedProjects(UserModel user, EProjectRole role) {
+        List<ProjectModel> projectList = new ArrayList<>();
+
+        for (AssignedProjectModel model : assignedProjectRepository.findByUser(user)) {
+            if(model.getRole().equals(role)) {
+                projectList.add(model.getProject());
+            }
         }
 
         return projectList;

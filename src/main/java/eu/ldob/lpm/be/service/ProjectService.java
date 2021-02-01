@@ -1,5 +1,6 @@
 package eu.ldob.lpm.be.service;
 
+import eu.ldob.lpm.be.converter.MemberConverter;
 import eu.ldob.lpm.be.converter.ProjectConverter;
 import eu.ldob.lpm.be.exception.LpmNoResultException;
 import eu.ldob.lpm.be.model.AssignedProjectModel;
@@ -10,12 +11,14 @@ import eu.ldob.lpm.be.repository.AssignedProjectRepository;
 import eu.ldob.lpm.be.repository.ProjectRepository;
 import eu.ldob.lpm.be.repository.UserRepository;
 import eu.ldob.lpm.be.request.ProjectRequest;
+import eu.ldob.lpm.be.response.MemberResponse;
 import eu.ldob.lpm.be.response.ProjectListResponse;
 import eu.ldob.lpm.be.response.ProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,8 @@ public class ProjectService {
 
     @Autowired
     ProjectConverter converter;
+    @Autowired
+    MemberConverter memberConverter;
     @Autowired
     ProjectRepository projectRepository;
     @Autowired
@@ -66,7 +71,6 @@ public class ProjectService {
     }
 
     public ProjectResponse findById(Long id, UserModel user) throws LpmNoResultException {
-
         ProjectModel model = util.getAllowedProject(id, user);
 
         if(model != null) {
@@ -85,31 +89,48 @@ public class ProjectService {
         throw new LpmNoResultException("Project " + id + " not found");
     }
 
-    public void addMember(Long projectId, Long memberId, EProjectRole role) {
-        Optional<ProjectModel> project = projectRepository.findById(projectId);
-        if(project.isEmpty()) {
-            throw new LpmNoResultException("Project " + projectId + " not found");
+    public List<MemberResponse> findAllAssignedMembers(Long projectId, List<EProjectRole> roles, UserModel user) {
+        ProjectModel model = util.getAllowedProject(projectId, user);
+
+        if(model != null) {
+            List<MemberResponse> assignedMembers = new ArrayList<>();
+            for(AssignedProjectModel m : model.getAssignedUsers()) {
+                if(roles.contains(m.getRole())) {
+                    assignedMembers.add(memberConverter.modelToResponse(m.getUser()));
+                }
+            }
+
+            return assignedMembers;
         }
 
-        Optional<UserModel> user = userRepository.findById(memberId);
-        if(user.isEmpty()) {
-            throw new LpmNoResultException("Member " + memberId + " not found");
-        }
-
-        project.get().addAssignedUser(new AssignedProjectModel(project.get(), user.get(), role));
+        throw new LpmNoResultException("Project " + projectId + " not found");
     }
 
-    public void removeMember(Long projectId, Long memberId, EProjectRole role) {
-        Optional<ProjectModel> project = projectRepository.findById(projectId);
-        if(project.isEmpty()) {
-            throw new LpmNoResultException("Project " + projectId + " not found");
-        }
+    public void addMember(Long projectId, String memberUsername, EProjectRole role, UserModel user) {
+        ProjectModel project = util.getAllowedProject(projectId, user);
 
-        Optional<UserModel> user = userRepository.findById(memberId);
-        if(user.isEmpty()) {
-            throw new LpmNoResultException("Member " + memberId + " not found");
-        }
+        if(project != null) {
 
-        project.get().removeAssignedUser(new AssignedProjectModel(project.get(), user.get(), role));
+            Optional<UserModel> member = userRepository.findByUsername(memberUsername);
+            if(member.isEmpty()) {
+                throw new LpmNoResultException("Member " + memberUsername + " not found");
+            }
+
+            project.addAssignedUser(new AssignedProjectModel(project, member.get(), role));
+        }
+    }
+
+    public void removeMember(Long projectId, String memberUsername, EProjectRole role, UserModel user) {
+        ProjectModel project = util.getAllowedProject(projectId, user);
+
+        if(project != null) {
+
+            Optional<UserModel> member = userRepository.findByUsername(memberUsername);
+            if(member.isEmpty()) {
+                throw new LpmNoResultException("Member " + memberUsername + " not found");
+            }
+
+            project.removeAssignedUser(new AssignedProjectModel(project, member.get(), role));
+        }
     }
 }

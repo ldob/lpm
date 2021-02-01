@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>{{title}}</h2>
+
+<mat-dialog-content>
+	<mat-form-field>
+		<input matInput
+			placeholder="Benutzerkürzel"
+			type="text"
+			class="form-control"
+			autocomplete="off"
+			name="username"
+			[(ngModel)]="username">
+	</mat-form-field>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+	<button class="mat-raised-button"(click)="close()">{{closeText}}</button>
+	<span style="width: 12px"></span>
+    <button class="mat-raised-button mat-primary"(click)="save()">{{saveText}}</button>
+</mat-dialog-actions>

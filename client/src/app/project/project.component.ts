@@ -1,15 +1,13 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Observable} from "rxjs";
-import {ProjectService} from "../service/project.service";
-import {LogService} from "../service/log.service";
-import {IProject, Project} from "../entity/project";
-import {ActivatedRoute, Router} from "@angular/router";
-import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent} from "@angular/material/chips";
-import {FormControl} from "@angular/forms";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {map, startWith} from "rxjs/operators";
-import {IMember, Member} from "../entity/member";
+import {Observable} from 'rxjs';
+import {ProjectService} from '../service/project.service';
+import {LogService} from '../service/log.service';
+import {IProject, Project} from '../entity/project';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MatTableDataSource} from '@angular/material/table';
+import {IMember} from '../entity/member';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MemberInputDialogComponent } from '../member-input-dialog/member-input-dialog.component';
 
 @Component({
   selector: 'app-project',
@@ -22,26 +20,50 @@ export class ProjectComponent implements OnInit {
   project: IProject;
   priorityList: Array<string>;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private projectService: ProjectService, private log: LogService) {
+  memberManageList$: MatTableDataSource<IMember>;
+  memberCollaborateList$: MatTableDataSource<IMember>;
+  memberObserveList$: MatTableDataSource<IMember>;
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private dialog: MatDialog, private projectService: ProjectService, private log: LogService) {
     this.id = null;
     this.project = new Project();
     this.priorityList = [];
 
-    this.filteredMembers = this.memberManageCtrl.valueChanges.pipe(
-      startWith(null),
-      map((member: IMember | null) => member ? this._filterMember(member) : this.allMembers.slice())
-    );
+    this.memberManageList$ = new MatTableDataSource<IMember>();
+    this.memberCollaborateList$ = new MatTableDataSource<IMember>();
+    this.memberObserveList$ = new MatTableDataSource<IMember>();
   }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(
       params => {
-        this.id = parseInt(params['id'], 10);
-        if(this.id) {
+        this.id = parseInt(params.id, 10);
+        if (this.id) {
           this.projectService.getProject(this.id).subscribe(
             data => {
               this.project = data as IProject;
-              this.log.debug("getProject", this.project);
+              this.log.debug('getProject', this.project);
+            }
+          );
+
+          this.projectService.getProjectMember(this.id, 'MANAGE').subscribe(
+            data => {
+              this.memberManageList$.data = data as IMember[];
+              this.log.debug('getMemberManage', this.memberManageList$.data);
+            }
+          );
+
+          this.projectService.getProjectMember(this.id, 'COLLABORATE').subscribe(
+            data => {
+              this.memberCollaborateList$.data = data as IMember[];
+              this.log.debug('getMemberCollaborate', this.memberCollaborateList$.data);
+            }
+          );
+
+          this.projectService.getProjectMember(this.id, 'OBSERVE').subscribe(
+            data => {
+              this.memberObserveList$.data = data as IMember[];
+              this.log.debug('getMemberObserve', this.memberObserveList$.data);
             }
           );
         }
@@ -54,90 +76,69 @@ export class ProjectComponent implements OnInit {
     this.projectService.getPriorities().subscribe(
       data => {
         this.priorityList = data as Array<string>;
-        this.log.debug("getPriorities", this.priorityList);
+        this.log.debug('getPriorities', this.priorityList);
       }
     );
   }
 
   save(): void {
-    if(this.id) {
+    if (this.id) {
       this.projectService.editProject(this.project).subscribe(
         data => {
           this.project = data as IProject;
-          this.router.navigateByUrl('/projects');
         }
       );
     }
     else {
       this.projectService.addProject(this.project).subscribe(
         data => {
-          let p = data as IProject;
-          //this.router.navigate(['/project/', p.id]);
-          this.router.navigateByUrl('/projects');
+          this.project = data as IProject;
         }
       );
     }
   }
 
+  saveAndClose(): void {
+    this.save();
+    this.router.navigateByUrl('/projects');
+  }
+
   // ***** MEMBERS *****
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  memberManageCtrl = new FormControl();
-  filteredMembers: Observable<IMember[]>;
-  members: IMember[] = [new Member(1, 'LDO', 'Lucas Dobler')];
-  allMembers: IMember[] = [new Member(1, 'LDO', 'Lucas Dobler'), new Member(2, 'LAM', 'Alexander Lampret')];
+  addAssignedMember(role: string, list: MatTableDataSource<IMember>): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
 
-  // @ts-ignore
-  @ViewChild('memberManageInput') memberManageInput: ElementRef<HTMLInputElement>;
-  // @ts-ignore
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+    dialogConfig.data = {
+      title: role + ' hinzufügen',
+      close: 'Schließen',
+      save: 'Speichern'
+    }
 
-  addMember(event: MatChipInputEvent, type: string): void {
-    const input = event.input;
-    const value = event.value;
+    const dialogRef = this.dialog.open(MemberInputDialogComponent, dialogConfig);
 
-    if ((value || '').trim()) {
-      let member = this._getMemberByUsername(value.trim());
-      if(member) {
-        this.members.push(member);
+    dialogRef.afterClosed().subscribe(
+      username => {
+        this.log.debug('dialogOutput', username);
+        if (username) {
+          this.projectService.addProjectMember(this.project.id, username, role).subscribe(
+            data => {
+              list.data = data as IMember[];
+              this.log.debug('addMember', list.data);
+            }
+          );
+        }
       }
-    }
-
-    if (input) {
-      input.value = '';
-    }
-
-    this.memberManageCtrl.setValue(null);
+    );
   }
 
-  removeMember(member: IMember, type: string): void {
-    const index = this.members.indexOf(member);
-    if (index >= 0) {
-      this.members.splice(index, 1);
-    }
-  }
-
-  selectedMember(event: MatAutocompleteSelectedEvent, type: string): void {
-    let member = this._getMemberByUsername(event.option.viewValue);
-    if(member) {
-      this.members.push(member);
-      this.memberManageInput.nativeElement.value = '';
-      this.memberManageCtrl.setValue(null);
-    }
-  }
-
-  private _getMemberByUsername(value: string): IMember | null {
-    let member = null;
-    this.allMembers.forEach(m => {
-      if(m.username === value.trim()) {
-        member = m;
+  removeAssignedMember(member: IMember, role: string, list: MatTableDataSource<IMember>): void {
+    this.projectService.removeProjectMember(this.project.id, member.username, role).subscribe(
+      data => {
+        list.data = data as IMember[];
+        this.log.debug('removeMember', list.data);
       }
-    });
-
-    return member;
+    );
   }
 
-  private _filterMember(value: IMember): IMember[] {
-    const filterValue = value.username.toLowerCase();
-    return this.allMembers.filter(member => member.username.toLowerCase().indexOf(filterValue) === 0);
-  }
 }

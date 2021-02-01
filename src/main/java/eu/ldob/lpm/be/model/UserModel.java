@@ -112,4 +112,13 @@ public class UserModel extends AModel<Long> {
             }
         }
     }
+
+    public boolean isAdmin() {
+        for(RoleModel r: roles) {
+            if(r.getName().equals(ERole.ROLE_ADMIN)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -50,6 +50,8 @@ import localeDe from '@angular/common/locales/de';
 import { UserComponent } from './user/user.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
+import { MatDialogModule } from '@angular/material/dialog';
+import { MemberInputDialogComponent } from './member-input-dialog/member-input-dialog.component';
 registerLocaleData(localeDe);
 
 
@@ -66,7 +68,8 @@ registerLocaleData(localeDe);
     ProjectStatusComponent,
     ErrorComponent,
     LoadingOverlayComponent,
-    UserComponent
+    UserComponent,
+    MemberInputDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -103,13 +106,17 @@ registerLocaleData(localeDe);
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDialogModule
   ],
   providers: [
     authInterceptorProviders,
     { provide: LOCALE_ID, useValue: 'de-AT'},
     LogService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    MemberInputDialogComponent
+  ]
 })
 export class AppModule { }
